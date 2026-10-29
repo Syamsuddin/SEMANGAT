@@ -1,0 +1,4 @@
+nip,nama,jenis_pegawai,status,kode_opd,nama_opd,kode_unit,nama_unit,kode_jabatan,nama_jabatan,jenis_jabatan,jenjang_jabatan,kelas_jabatan,rumpun_jabatan,nip_atasan,email,telepon
+199901012010011101,Atasan Contoh,pns,aktif,OPD-01,Badan Kepegawaian,,,,,,,,,,,
+,Tanpa NIP,pns,aktif,OPD-01,Badan Kepegawaian,,,,,,,,,,,
+199901012020011103,Staf Contoh Dua,pppk,aktif,OPD-01,Badan Kepegawaian,,,,,,,,,199901012010011101,,

@@ -1,8 +1,13 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Modules\Integrasi\Adapters\SimpegApiAdapter;
+use App\Modules\Integrasi\Jobs\SyncEmployees;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+// docs/06 § 2: sinkron harian 02:00 WITA [ASUMSI] — hanya bila adaptor API terkonfigurasi.
+if (config('semangat.employee_adapter') === SimpegApiAdapter::NAME) {
+    Schedule::job(new SyncEmployees(SimpegApiAdapter::NAME))
+        ->dailyAt('02:00')
+        ->timezone('Asia/Makassar')
+        ->withoutOverlapping();
+}
