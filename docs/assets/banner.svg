@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="t d">
+  <title id="t">SEMANGAT CORPU</title>
+  <desc id="d">Sistem pembelajaran terintegrasi Corporate University ASN Pemkab Hulu Sungai Selatan</desc>
+  <rect width="1200" height="320" fill="#0F2A4A"/>
+  <rect x="0" y="300" width="1200" height="20" fill="#F2A33A"/>
+  <rect x="0" y="292" width="1200" height="8" fill="#14857F"/>
+  <g fill="none" stroke="#14857F" stroke-width="10" stroke-linecap="round">
+    <path d="M1010 70 a90 90 0 1 1 -63.6 26.4"/>
+  </g>
+  <g fill="#F2A33A">
+    <polygon points="946,78 966,110 930,112"/>
+  </g>
+  <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" fill="#FFFFFF" font-size="13" font-weight="600" text-anchor="middle">
+    <text x="1010" y="125">KESENJANGAN</text>
+    <text x="1010" y="152">IDP · HCDP</text>
+    <text x="1010" y="179">10 : 20 : 70</text>
+    <text x="1010" y="206">JP · DAMPAK</text>
+  </g>
+  <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
+    <text x="64" y="118" fill="#FFFFFF" font-size="64" font-weight="700" letter-spacing="2">SEMANGAT <tspan fill="#F2A33A">CORPU</tspan></text>
+    <text x="66" y="166" fill="#E6F4F3" font-size="24" font-weight="500">Sistem Pembelajaran Terintegrasi ASN</text>
+    <text x="66" y="200" fill="#E6F4F3" font-size="24" font-weight="500">Pemerintah Kabupaten Hulu Sungai Selatan</text>
+    <text x="66" y="250" fill="#FFFFFF" font-size="16" font-weight="400" opacity="0.85">Corporate University · Peraturan LAN 6/2023 · KepLAN 306/2024</text>
+  </g>
+</svg>
