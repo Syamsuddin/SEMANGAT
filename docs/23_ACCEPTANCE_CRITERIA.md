@@ -1,16 +1,8 @@
 # 23 — Acceptance Criteria
 
-Fitur aktif = MVP F1–F4 (`docs/03_ROADMAP.md`). Patokan selesai = kriteria di sini + DoD (`docs/24_DEFINITION_OF_DONE.md`). Fitur yang sudah diterima dipindah ke `docs/_archive/23-<fitur>.md`. Fase F5+ ditulis di sini saat fasenya dimulai, dari Bab 5 rancang bangun. Setiap fitur ber-UI juga wajib: empat state tampil, layak di 360 px, aksi destruktif lewat dialog konfirmasi (pola: `docs/26_UI_CONVENTIONS.md`).
+Fitur aktif = MVP F2–F4 (F1 terarsip) (`docs/03_ROADMAP.md`). Patokan selesai = kriteria di sini + DoD (`docs/24_DEFINITION_OF_DONE.md`). Fitur yang sudah diterima dipindah ke `docs/_archive/23-<fitur>.md`. Fase F5+ ditulis di sini saat fasenya dimulai, dari Bab 5 rancang bangun. Setiap fitur ber-UI juga wajib: empat state tampil, layak di 360 px, aksi destruktif lewat dialog konfirmasi (pola: `docs/26_UI_CONVENTIONS.md`).
 
-## F1 — Fondasi & data pegawai
-- **FON-01** Given pegawai aktif dengan NIP valid, When login dengan NIP + kata sandi benar, Then masuk ke beranda sesuai peran utamanya. Given pegawai `inactive`, Then login ditolak "Akun tidak aktif".
-- **FON-03** Given sinkron menetapkan A sebagai `supervisor_id` B, When sinkron selesai, Then A punya peran `atasan` dan melihat B di "Tim saya"; When B pindah atasan, Then A kehilangan akses ke B pada sinkron berikut.
-- **FON-04** Given ASN X, When membuka `/pegawai/{Y}` milik pegawai lain, Then 404. Berlaku untuk 9 peran sesuai matriks `docs/05_USER_ROLE.md`.
-- **FON-05** Given pengelola membuka laporan asesmen rinci, When membuka tanpa alasan, Then ditolak; dengan alasan, Then 1 baris `sys_audit_logs(action='read_sensitive', reason≠null)`; auditor tidak bisa mengubah/menghapus baris itu. *(Keputusan pemilik produk 2026-10-29: F1 menguji mekanismenya — `RecordSensitiveRead` + `sys_audit_logs` append-only; halaman laporan asesmen rinci memakai mekanisme ini dan diuji ulang di F2 karena `cmp_assessments` baru ada di F2.)*
-- **FON-06** Given user berperan `pengelola` tanpa 2FA, When mengakses rute apa pun selain setup 2FA, Then dialihkan ke setup 2FA.
-- **FON-09** Given dokumen terbit, When `/verifikasi/{uuid}` dibuka tanpa login, Then tampil jenis, nama pemilik, tanggal, status (berlaku/dicabut) dan hash, tanpa isi dokumen.
-- **INT-01/03** Given berkas pegawai valid berisi 3 baris, When diimpor dua kali, Then tepat 3 baris `hr_employees` (idempoten) dengan `source`, `synced_at` terisi. Given 1 baris tanpa NIP, Then seluruh berkas ditolak + laporan per baris.
-- **INT-08** Given run sinkron gagal, Then panel integrasi menampilkan status `failed`, waktu, jumlah gagal, dan tombol ulang.
+F1 diterima 2026-10-29 → `docs/_archive/23-F1.md`.
 
 ## F2 — Profil & kesenjangan
 - **KOM-04/05** Given SKJ mensyaratkan kompetensi K level 3 dan pegawai punya hasil uji `verified` level 2 yang masih berlaku, Then gap K = 1 berlabel "Terverifikasi". Given hanya asesmen mandiri tervalidasi level 2, Then gap 1 berlabel "Sementara". Given tanpa data, Then gap 3 berlabel "Indikatif" dengan badge bergaris putus-putus, bukan gaya terverifikasi.

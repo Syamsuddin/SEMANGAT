@@ -118,5 +118,10 @@
     "Q-05 kelengkapan SKJ teknis & hasil uji", "Q-06 kesiapan server pegawai lokal", "Q-08 Perbup/SE Corpu",
     "Q-09 integrasi platform LAN", "Q-10 akronim SEMANGAT", "Q-11 tahapan final", "NFR-12 retensi arsip",
     "Aktivasi akun & kata sandi awal pegawai", "Pengganti image MinIO (minio/minio tak tersedia)"
-  ]
+  ],
+  "phases": {
+    "F1": {"status": "accepted", "accepted_at": "2026-10-29", "archive": "docs/_archive/23-F1.md"},
+    "F2": {"status": "pending"}, "F3": {"status": "pending"}, "F4": {"status": "pending"},
+    "F5": {"status": "pending"}, "F6": {"status": "pending"}, "F7": {"status": "pending"}, "F8": {"status": "pending"}
+  }
 }
