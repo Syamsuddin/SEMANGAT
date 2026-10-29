@@ -67,6 +67,9 @@ return [
 
     'timezone' => env('APP_TIMEZONE', 'Asia/Makassar'),
 
+    // Daftar IP proxy (pisah koma) atau `*`; kosong = tidak memercayai header X-Forwarded-*.
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
