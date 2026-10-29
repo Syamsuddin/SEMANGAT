@@ -1,0 +1,4 @@
+nip,nama,jenis_pegawai,status,kode_opd,nama_opd,kode_unit,nama_unit,kode_jabatan,nama_jabatan,jenis_jabatan,jenjang_jabatan,kelas_jabatan,rumpun_jabatan,nip_atasan,email,telepon
+199901012010011101,Atasan Contoh,pns,aktif,OPD-01,Badan Kepegawaian,OPD-01-B1,Bidang Pengembangan,JAB-01,Kepala Bidang Pengembangan,struktural,administrator_jpt,11,Manajemen SDM,,atasan@contoh.test,
+199901012015011102,Staf Contoh Satu,pns,aktif,OPD-01,Badan Kepegawaian,OPD-01-B1,Bidang Pengembangan,JAB-02,Analis SDM Aparatur,fungsional,fungsional,9,Manajemen SDM,199901012010011101,,
+199901012020011103,Staf Contoh Dua,pppk,aktif,OPD-01,Badan Kepegawaian,,,,,,,,,199901012010011101,,081200000000

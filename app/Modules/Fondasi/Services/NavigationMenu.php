@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Modules\Fondasi\Services;
+
+use App\Modules\Fondasi\Enums\Permission;
+use App\Modules\Fondasi\Enums\Role;
+use App\Modules\Fondasi\Models\User;
+
+/** Butir navigasi per peran. Ponsel: 4 butir pertama (bottom nav); ≥1024: sidebar penuh. */
+class NavigationMenu
+{
+    /** @return list<array{label: string, route: string, icon: string, active: string}> */
+    public function for(User $user): array
+    {
+        $items = [['label' => __('fondasi.nav.home'), 'route' => 'fondasi.home', 'icon' => 'home', 'active' => 'fondasi.home']];
+
+        if ($user->hasRole(Role::Atasan->value)) {
+            $items[] = ['label' => __('fondasi.nav.team'), 'route' => 'fondasi.team.index', 'icon' => 'user-group', 'active' => 'fondasi.team.*'];
+        }
+
+        if ($user->can(Permission::EmployeeViewAny->value) && ! $user->hasRole(Role::Atasan->value)) {
+            $items[] = ['label' => __('fondasi.nav.employees'), 'route' => 'fondasi.employees.index', 'icon' => 'users', 'active' => 'fondasi.employees.index'];
+        }
+
+        if ($user->employee_id !== null) {
+            $items[] = ['label' => __('fondasi.nav.profile'), 'route' => 'fondasi.profile', 'icon' => 'identification', 'active' => 'fondasi.profile'];
+        }
+
+        if ($user->can(Permission::IntegrationView->value)) {
+            $items[] = ['label' => __('fondasi.nav.integration'), 'route' => 'integrasi.panel', 'icon' => 'arrow-path-rounded-square', 'active' => 'integrasi.*'];
+        }
+
+        $items[] = ['label' => __('fondasi.nav.account'), 'route' => 'fondasi.account', 'icon' => 'user-circle', 'active' => 'fondasi.account'];
+
+        if ($user->can(Permission::EmployeeViewAny->value) && $user->hasRole(Role::Atasan->value)) {
+            $items[] = ['label' => __('fondasi.nav.employees'), 'route' => 'fondasi.employees.index', 'icon' => 'users', 'active' => 'fondasi.employees.index'];
+        }
+
+        return $items;
+    }
+
+    /**
+     * Bottom nav ponsel: maksimal 4 butir; "Akun" selalu ada.
+     *
+     * @return list<array{label: string, route: string, icon: string, active: string}>
+     */
+    public function mobile(User $user): array
+    {
+        $items = $this->for($user);
+        $account = array_values(array_filter($items, fn ($i) => $i['route'] === 'fondasi.account'));
+        $others = array_values(array_filter($items, fn ($i) => $i['route'] !== 'fondasi.account'));
+
+        return [...array_slice($others, 0, 3), ...$account];
+    }
+}

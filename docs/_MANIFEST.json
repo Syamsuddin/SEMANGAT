@@ -108,11 +108,15 @@
     "Pest 3, Larastan level 6, spatie/laravel-permission, Laravel Fortify (2FA), barryvdh/laravel-dompdf + simplesoftwareio/simple-qrcode",
     "SSO pemda belum ada: login NIP + kata sandi, adaptor SSO disiapkan",
     "Fitur AI (IDP-09, KMS-06) ditunda",
-    "Roadmap F1-F8 berstatus USULAN sampai Q-11 diputuskan"
+    "Roadmap F1-F8 berstatus USULAN sampai Q-11 diputuskan",
+    "Bentuk respons API server pegawai = kolom templat impor (GET /pegawai?page=N), menunggu Q-06",
+    "Impor berkas pegawai bukan snapshot penuh (tak menonaktifkan yang tak tercantum); sinkron API snapshot penuh",
+    "Penugasan peran manual bercakupan di sys_role_assignments (keputusan pemilik produk 2026-10-29)"
   ],
   "open_questions": [
     "Q-01 migrasi CORPU lama", "Q-02 API SKP", "Q-03 SK struktur Corpu", "Q-04 evaluasi L3 sudah rutin?",
     "Q-05 kelengkapan SKJ teknis & hasil uji", "Q-06 kesiapan server pegawai lokal", "Q-08 Perbup/SE Corpu",
-    "Q-09 integrasi platform LAN", "Q-10 akronim SEMANGAT", "Q-11 tahapan final", "NFR-12 retensi arsip"
+    "Q-09 integrasi platform LAN", "Q-10 akronim SEMANGAT", "Q-11 tahapan final", "NFR-12 retensi arsip",
+    "Aktivasi akun & kata sandi awal pegawai", "Pengganti image MinIO (minio/minio tak tersedia)"
   ]
 }

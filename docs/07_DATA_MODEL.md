@@ -24,6 +24,7 @@
 | is_active | boolean | NOT NULL default 1 | diturunkan dari `hr_employees.status` |
 | last_login_at | timestamp | NULL | |
 | notification_prefs | json | NULL | {"mail":true,"inapp":true,"wa":false} (FON-07) |
+| remember_token | varchar(100) | NULL | bawaan Laravel ("Ingat saya") |
 
 ### hr_org_units ⇅
 | Kolom | Tipe | Constraint | Catatan |
@@ -63,7 +64,9 @@
 Indeks: (opd_id, status), (supervisor_id).
 
 ### hr_position_histories ⇅
-employee_id FK, position_id FK, org_unit_id FK, started_on date, ended_on date NULL, + kolom integrasi.
+employee_id FK, position_id FK, org_unit_id FK, started_on date, ended_on date NULL, + kolom integrasi. **Belum dimigrasi di F1** — sumber belum menyediakan riwayat (Q-06); dibuat saat format sumber pasti.
+
+Catatan migrasi F1: `hr_positions.job_standard_id` sudah ada tetapi FK→`cmp_job_standards` ditambahkan pada F2. Pegawai di-upsert berkunci `nip` (UNIQUE); unit & jabatan berkunci (`source`, `external_id` = kode).
 
 ### hr_talent_boxes ⇅ (INT-04, F5+)
 employee_id FK, period_year smallint, box tinyint (1–9), + kolom integrasi. UNIQUE(employee_id, period_year).
@@ -98,11 +101,14 @@ delegator_employee_id FK, delegate_employee_id FK, capability varchar(40) (`appr
 ### gov_role_overrides (koreksi peran turunan)
 user_id FK, role varchar(40), scope_type varchar(20) NULL, scope_id bigint NULL, reason varchar(255) NOT NULL, granted_by FK→users, expires_at datetime NOT NULL.
 
+### sys_role_assignments (penugasan peran manual tercatat — keputusan pemilik produk 2026-10-29)
+user_id FK→users, role varchar(40) (hanya peran non-turunan: `koordinator_opd`,`fasilitator`,`pengelola`,`clo`,`dewan_pengarah`,`admin_teknis`,`auditor`), scope_type varchar(20) NULL (`opd` untuk koordinator), scope_id bigint NULL (→hr_org_units.id level `opd`), reason varchar(255) NOT NULL, assigned_by FK→users NULL, starts_at datetime, ends_at datetime NULL, revoked_at datetime NULL. Indeks (user_id, role). Peran spatie = materialisasi `SyncUserRoles` dari: pegawai aktif → `asn`, bawahan langsung aktif → `atasan`, penugasan berlaku di tabel ini. Setiap penugasan/pencabutan → `sys_audit_logs` (`role_assign`/`role_revoke`). Saat registri SK (M04) ada, `pengelola`/`clo`/`dewan_pengarah` diturunkan dari sana.
+
 ### int_sync_runs (INT-08)
-adapter varchar(60), started_at, finished_at NULL, status varchar(12) (`running`,`success`,`partial`,`failed`), rows_ok int, rows_failed int, error text NULL, triggered_by FK→users NULL.
+adapter varchar(60), source_ref varchar(255) NULL (rujukan berkas/parameter agar run dapat diulang dari panel), started_at, finished_at NULL, status varchar(12) (`running`,`success`,`partial`,`failed`), rows_ok int, rows_failed int, error text NULL, triggered_by FK→users NULL. Indeks (adapter, started_at).
 
 ### int_sync_failures
-sync_run_id FK, external_id varchar(64), payload json, error text, retried_at NULL, resolved_at NULL.
+sync_run_id FK, row_number int unsigned NULL (baris berkas, untuk laporan per baris), external_id varchar(64) NULL (NULL bila baris tanpa NIP), payload json, error text, retried_at NULL, resolved_at NULL.
 
 ### out_issued_documents (FON-09 — semua PDF terbitan)
 | Kolom | Tipe | Constraint | Catatan |
