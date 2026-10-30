@@ -5,7 +5,7 @@ Status: **USULAN** — tahapan final (Q-11) sengaja ditunda di rancang bangun. U
 | Fase | Tujuan demoable | Modul / kebutuhan tercakup | Bergantung | Status |
 |---|---|---|---|---|
 | F1 Fondasi & data pegawai | Pengelola mengimpor pegawai/unit/jabatan; ASN login NIP dan melihat profil sendiri; atasan otomatis melihat timnya; panel kesehatan sinkron tampil | FON-01…06, 09 (verifikator QR publik); INT-01, 03, 08; peran turunan & scope | — | **Selesai** (2026-10-29) |
-| F2 Profil & kesenjangan | ASN melihat SKJ jabatannya, level aktual, dan kesenjangan berlabel keyakinan; atasan memvalidasi asesmen mandiri | KOM-01…05, 06, 08; INT-02 (impor berkas SKP) | F1 | Belum |
+| F2 Profil & kesenjangan | ASN melihat SKJ jabatannya, level aktual, dan kesenjangan berlabel keyakinan; atasan memvalidasi asesmen mandiri | KOM-01…05, 06, 08; INT-02 (impor berkas SKP) | F1 | **Selesai** (2026-10-30) |
 | F3 IDP poros | ASN menyusun IDP dari draf otomatis, tautan SKP, atasan setuju massal, Rencana Pembelajaran PDF ber-QR terbit, check-in, penutupan | IDP-01…07, 10 | F2 | Belum |
 | F4 JP & Laporan | Saldo 20 JP, unggah + verifikasi sertifikat luar, riwayat bangkom, Laporan Hasil Pembelajaran PDF | JPR-01…06; FON-07 (notifikasi dasar) | F3 | Belum |
 | F5 Katalog, path & LMS | Katalog 10:20:70 bertag kompetensi, pendaftaran, kelas e-learning, presensi QR, sertifikat otomatis ke M12, rekomendasi program ke IDP | LPA-01…03; KAT-01…04, 06; LMS-01…05, 07 | F4 | Belum |

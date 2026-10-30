@@ -1,15 +1,8 @@
 # 23 — Acceptance Criteria
 
-Fitur aktif = MVP F2–F4 (F1 terarsip) (`docs/03_ROADMAP.md`). Patokan selesai = kriteria di sini + DoD (`docs/24_DEFINITION_OF_DONE.md`). Fitur yang sudah diterima dipindah ke `docs/_archive/23-<fitur>.md`. Fase F5+ ditulis di sini saat fasenya dimulai, dari Bab 5 rancang bangun. Setiap fitur ber-UI juga wajib: empat state tampil, layak di 360 px, aksi destruktif lewat dialog konfirmasi (pola: `docs/26_UI_CONVENTIONS.md`).
+Fitur aktif = MVP F3–F4 (F1–F2 terarsip) (`docs/03_ROADMAP.md`). Patokan selesai = kriteria di sini + DoD (`docs/24_DEFINITION_OF_DONE.md`). Fitur yang sudah diterima dipindah ke `docs/_archive/23-<fitur>.md`. Fase F5+ ditulis di sini saat fasenya dimulai, dari Bab 5 rancang bangun. Setiap fitur ber-UI juga wajib: empat state tampil, layak di 360 px, aksi destruktif lewat dialog konfirmasi (pola: `docs/26_UI_CONVENTIONS.md`).
 
-F1 diterima 2026-10-29 → `docs/_archive/23-F1.md`.
-
-## F2 — Profil & kesenjangan
-- **KOM-04/05** Given SKJ mensyaratkan kompetensi K level 3 dan pegawai punya hasil uji `verified` level 2 yang masih berlaku, Then gap K = 1 berlabel "Terverifikasi". Given hanya asesmen mandiri tervalidasi level 2, Then gap 1 berlabel "Sementara". Given tanpa data, Then gap 3 berlabel "Indikatif" dengan badge bergaris putus-putus, bukan gaya terverifikasi.
-- **KOM-03** Given hasil uji `verified` kedaluwarsa dan ada asesmen mandiri tervalidasi lebih baru, Then level aktual diambil dari asesmen mandiri (`provisional`).
-- **KOM-06** Given ASN mengisi asesmen mandiri, When atasan menolak, Then tidak dipakai mesin kesenjangan; When menyetujui, Then gap dihitung ulang ≤ 1 menit (queue).
-- **Akses** Atasan melihat ringkasan gap tim, tidak melihat berkas laporan asesmen.
-- **INT-02** Given seluruh rute, job, dan adaptor, Then tidak ada request non-GET ke host e-Kinerja dan tidak ada kelas yang mengimplementasi tulis ke `SkpSource`.
+F1 diterima 2026-10-29 → `docs/_archive/23-F1.md`. F2 diterima 2026-10-30 → `docs/_archive/23-F2.md`.
 
 ## F3 — IDP
 - **IDP-01** Given pegawai dengan gap & RHK SKP periode berjalan, When membuka "Susun IDP", Then draf berisi ≤3 kompetensi gap terbesar dengan usulan tautan RHK.

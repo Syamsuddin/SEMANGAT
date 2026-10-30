@@ -20,10 +20,11 @@ Pemilik semua perintah. Dokumen lain merujuk ke sini. Prefix `./vendor/bin/sail`
 | Reset DB dev ⚠️ dev saja | `php artisan migrate:fresh --seed` |
 | Sinkron pegawai manual | `php artisan semangat:sync employees` |
 | Impor berkas SKP | `php artisan semangat:import skp <path.xlsx> --period=2027` |
+| Impor data kompetensi (kamus/SKJ/hasil uji) | `php artisan semangat:import kamus\|skj\|hasil-uji <path.xlsx> --by=<username pengelola>` |
 | Hitung ulang kesenjangan | `php artisan semangat:gaps:recalculate [--employee=<nip>]` |
 | Build aset produksi | `npm run build` |
 | Cache produksi | `php artisan optimize` |
 | Gerbang pra-commit (lokal) | `./vendor/bin/pint --test && ./vendor/bin/phpstan analyse && php artisan test --parallel` |
 | Validasi blueprint | `bash scripts/validate.sh` |
 
-Perintah `semangat:*` dibuat pada fase modulnya (F1/F2); bila belum ada, buat sesuai tabel ini, jangan mengganti namanya.
+Perintah `semangat:*` dibuat pada fase modulnya (F1/F2); bila belum ada, buat sesuai tabel ini, jangan mengganti namanya. Target `kamus|skj|hasil-uji` ditambahkan di F2 (keputusan pemilik produk 2026-10-30: data kompetensi masuk lewat impor berkas, halaman `/kompetensi/impor` setara).
