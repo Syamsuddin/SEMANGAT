@@ -2,6 +2,7 @@
 
 namespace App\Modules\Integrasi;
 
+use App\Modules\Integrasi\Console\ImportCommand;
 use App\Modules\Integrasi\Console\SyncCommand;
 use App\Modules\Integrasi\Livewire\EmployeeImport;
 use App\Modules\Integrasi\Livewire\HealthPanel;
@@ -30,7 +31,7 @@ class IntegrasiServiceProvider extends ServiceProvider
         Livewire::component('integrasi.employee-import', EmployeeImport::class);
 
         if ($this->app->runningInConsole()) {
-            $this->commands([SyncCommand::class]);
+            $this->commands([SyncCommand::class, ImportCommand::class]);
         }
     }
 }

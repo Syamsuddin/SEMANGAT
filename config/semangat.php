@@ -2,6 +2,7 @@
 
 use App\Modules\Integrasi\Adapters\EmployeeFileImportAdapter;
 use App\Modules\Integrasi\Adapters\SimpegApiAdapter;
+use App\Modules\Integrasi\Adapters\SkpFileImportAdapter;
 
 return [
 
@@ -12,6 +13,10 @@ return [
         'employees' => [
             EmployeeFileImportAdapter::NAME => EmployeeFileImportAdapter::class,
             SimpegApiAdapter::NAME => SimpegApiAdapter::class,
+        ],
+        // INT-02: hanya baca. EkinerjaApiAdapter ditambahkan saat Q-02 terjawab.
+        'skp' => [
+            SkpFileImportAdapter::NAME => SkpFileImportAdapter::class,
         ],
     ],
 
@@ -28,6 +33,20 @@ return [
         'path' => 'imports',
         'max_kb' => 10240,
     ],
+
+    // Host e-Kinerja — hanya untuk penjaga INT-02 (tidak ada request non-GET ke host ini).
+    'ekinerja' => [
+        'url' => env('EKINERJA_API_URL', 'https://ekinerja.hulusungaiselatankab.go.id'),
+    ],
+
+    // Berkas laporan asesmen rinci (psikogram) — dienkripsi aplikasi; produksi: bucket terpisah semangat-sensitive (docs/21).
+    'sensitive' => [
+        'disk' => env('SEMANGAT_SENSITIVE_DISK', 'sensitive'),
+        'max_kb' => 10240,
+    ],
+
+    // Agregat clo/dewan: sel dengan n < ambang disamarkan (docs/21) [ASUMSI].
+    'aggregate_min_n' => 5,
 
     'verify_base_url' => env('SEMANGAT_VERIFY_BASE_URL', env('APP_URL')),
 

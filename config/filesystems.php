@@ -38,6 +38,16 @@ return [
             'report' => false,
         ],
 
+        // Berkas Sensitivitas Tinggi (psikogram) — privat, terenkripsi aplikasi; produksi: s3 bucket semangat-sensitive.
+        'sensitive' => [
+            'driver' => 'local',
+            'root' => storage_path('app/sensitive'),
+            'visibility' => 'private',
+            'serve' => false,
+            'throw' => true,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

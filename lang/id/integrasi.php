@@ -4,7 +4,13 @@ return [
     'employee_status' => ['active' => 'Aktif', 'inactive' => 'Nonaktif'],
     'position_type' => ['structural' => 'Struktural', 'functional' => 'Fungsional', 'executor' => 'Pelaksana'],
     'sync_status' => ['running' => 'Berjalan', 'success' => 'Berhasil', 'partial' => 'Sebagian gagal', 'failed' => 'Gagal'],
-    'adapters' => ['employee_file' => 'Impor berkas pegawai', 'simpeg_api' => 'Sinkron server pegawai (API)'],
+    'adapters' => ['employee_file' => 'Impor berkas pegawai', 'simpeg_api' => 'Sinkron server pegawai (API)', 'skp_file' => 'Impor berkas SKP'],
+    'skp' => [
+        'employee_unknown' => 'NIP tidak ditemukan di data pegawai',
+        'code_required' => 'Kode RHK wajib diisi',
+        'description_required' => 'Rencana hasil kerja wajib diisi',
+        'duplicate' => 'Kode RHK untuk NIP ini duplikat dari baris :row',
+    ],
     'validation' => [
         'nip_required' => 'NIP wajib diisi',
         'nip_format' => 'NIP harus 18 digit angka',
