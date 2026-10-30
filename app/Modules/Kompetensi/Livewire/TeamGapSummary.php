@@ -33,15 +33,15 @@ class TeamGapSummary extends Component
             ->with('position:id,name')->orderBy('name')->get();
     }
 
-    /** @return \Illuminate\Database\Eloquent\Collection<int|string, \Illuminate\Database\Eloquent\Collection<int, Gap>> employee_id => gap terurut terbesar */
+    /** @return Collection<int, Gap> kesenjangan tim, terurut terbesar */
     #[Computed]
-    public function gaps(): \Illuminate\Database\Eloquent\Collection
+    public function gaps(): Collection
     {
         /** @var User $user */
         $user = auth()->user();
 
         return Gap::query()->visibleTo($user)->whereIn('employee_id', $this->members()->pluck('id'))
-            ->with('competency:id,code,name')->orderByDesc('gap')->get()->groupBy('employee_id');
+            ->with('competency:id,code,name')->orderByDesc('gap')->orderBy('competency_id')->get();
     }
 
     /** @return Collection<int, int> employee_id => jumlah asesmen menunggu */
