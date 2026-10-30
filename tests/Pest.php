@@ -7,6 +7,8 @@ use App\Modules\Fondasi\Models\User;
 use App\Modules\Integrasi\Data\SourceRowMapper;
 use App\Modules\Integrasi\Models\Employee;
 use App\Modules\Integrasi\Models\OrgUnit;
+use App\Modules\Integrasi\Models\Position;
+use App\Modules\Kompetensi\Models\JobStandard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -82,4 +84,46 @@ function employeeRow(string $nip, array $overrides = []): array
         'nip' => $nip, 'nama' => 'Pegawai '.$nip, 'jenis_pegawai' => 'pns', 'status' => 'aktif',
         'kode_opd' => 'OPD-01', 'nama_opd' => 'Badan Kepegawaian',
     ];
+}
+
+/** Tulis CSV ke disk impor (kolom judul + baris asosiatif) → source_ref. Dipakai impor kompetensi & SKP (F2). */
+function csvImport(array $columns, array $rows): string
+{
+    $escape = fn ($v) => preg_match('/[",\n]/', (string) $v) ? '"'.str_replace('"', '""', (string) $v).'"' : (string) $v;
+    $lines = [implode(',', $columns)];
+    foreach ($rows as $row) {
+        $lines[] = implode(',', array_map(fn ($c) => $escape($row[$c] ?? ''), $columns));
+    }
+    $ref = 'imports/'.Str::uuid().'.csv';
+    Storage::disk(config('semangat.imports.disk'))->put($ref, implode("\n", $lines)."\n");
+
+    return $ref;
+}
+
+/**
+ * Pegawai dengan jabatan ber-SKJ. $levels: competency_id => level dipersyaratkan; kosong = 3 kompetensi baru level 3.
+ *
+ * @return array{0: Employee, 1: JobStandard}
+ */
+function employeeWithSkj(array $levels = [], ?Employee $supervisor = null, ?OrgUnit $opd = null): array
+{
+    $position = Position::factory()->create();
+    $standard = JobStandard::factory()->forPosition($position)
+        ->when($levels === [], fn ($f) => $f->withCompetencies(3), fn ($f) => $f->requiring($levels))
+        ->create();
+    $employee = Employee::factory()
+        ->when($supervisor, fn ($f) => $f->supervisedBy($supervisor))
+        ->when($opd && ! $supervisor, fn ($f) => $f->inOpd($opd))
+        ->create(['position_id' => $position->id]);
+
+    return [$employee->load('position'), $standard->load('items')];
+}
+
+/** Salin fixture berkas SKP ke disk impor → source_ref (INT-02). */
+function skpFixture(string $name): string
+{
+    $ref = 'imports/'.Str::uuid().'.csv';
+    Storage::disk(config('semangat.imports.disk'))->put($ref, (string) file_get_contents(base_path('tests/Fixtures/skp_file/'.$name)));
+
+    return $ref;
 }
