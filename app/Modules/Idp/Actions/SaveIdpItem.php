@@ -6,6 +6,7 @@ use App\Modules\Fondasi\Models\User;
 use App\Modules\Idp\Models\Idp;
 use App\Modules\Idp\Models\IdpItem;
 use App\Modules\Idp\Services\DraftBuilder;
+use App\Modules\Integrasi\Models\Employee;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -30,6 +31,7 @@ class SaveIdpItem
         }
 
         $workResultIds = array_keys($this->drafts->workResults($idp->employee, $idp->period_year));
+        $input = $this->resolveMentor($input);
 
         $data = Validator::make($input, [
             'competency_id' => [
@@ -51,5 +53,31 @@ class SaveIdpItem
         $item->fill($data)->save();
 
         return $item;
+    }
+
+    /**
+     * Formulir memakai NIP mentor (pegawai di luar cakupan baca tidak dapat dipilih dari daftar).
+     *
+     * @param  array<string, mixed>  $input
+     * @return array<string, mixed>
+     */
+    private function resolveMentor(array $input): array
+    {
+        if (! array_key_exists('mentor_nip', $input)) {
+            return $input;
+        }
+
+        $nip = trim((string) $input['mentor_nip']);
+        unset($input['mentor_nip']);
+        if ($nip === '') {
+            return $input + ['mentor_employee_id' => null];
+        }
+
+        $id = Employee::query()->active()->where('nip', $nip)->value('id');
+        if ($id === null) {
+            throw ValidationException::withMessages(['mentor_nip' => __('idp.errors.mentor_not_found')]);
+        }
+
+        return ['mentor_employee_id' => (int) $id] + $input;
     }
 }

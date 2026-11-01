@@ -53,4 +53,19 @@ class DraftBuilder
             ->map(fn ($d) => (string) $d)
             ->all();
     }
+
+    /**
+     * Opsi pilihan RHK untuk formulir: id => "kode — deskripsi".
+     *
+     * @return array<int, string>
+     */
+    public function workResultOptions(Employee $employee, int $periodYear): array
+    {
+        return SkpWorkResult::query()
+            ->whereHas('summary', fn ($q) => $q->where('employee_id', $employee->id)->where('period_year', $periodYear))
+            ->orderBy('code')
+            ->get(['id', 'code', 'description'])
+            ->mapWithKeys(fn (SkpWorkResult $r) => [$r->id => $r->code.' — '.$r->description])
+            ->all();
+    }
 }

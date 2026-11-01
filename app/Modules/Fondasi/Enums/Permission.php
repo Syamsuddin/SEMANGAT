@@ -2,7 +2,7 @@
 
 namespace App\Modules\Fondasi\Enums;
 
-/** Izin spatie (F1–F2) — peta peran → izin di RolePermissionSeeder. */
+/** Izin spatie (F1–F3) — peta peran → izin di RolePermissionSeeder. */
 enum Permission: string
 {
     case EmployeeViewAny = 'employee.view_any';
@@ -13,6 +13,7 @@ enum Permission: string
     case RoleAssign = 'role.assign';
     case CompetencyManage = 'competency.manage';
     case CompetencyViewAggregate = 'competency.view_aggregate';
+    case IdpViewUnlinked = 'idp.view_unlinked';
 
     /** @return list<Role> */
     public function roles(): array
@@ -27,6 +28,8 @@ enum Permission: string
             // M03: impor kamus/SKJ/hasil uji & unggah laporan rinci (K*); agregat O/A/B (docs/05).
             self::CompetencyManage => [Role::Pengelola],
             self::CompetencyViewAggregate => [Role::KoordinatorOpd, Role::Pengelola, Role::Clo, Role::DewanPengarah, Role::Auditor],
+            // M06 IDP-10: daftar "IDP tanpa tautan SKP" — atasan T, koord. O, pengelola/auditor B (docs/05; clo hanya agregat).
+            self::IdpViewUnlinked => [Role::Atasan, Role::KoordinatorOpd, Role::Pengelola, Role::Auditor],
         };
     }
 }
