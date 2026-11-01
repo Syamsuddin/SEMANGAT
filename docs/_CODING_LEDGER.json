@@ -25,15 +25,15 @@
     {
       "mulai": "2026-11-01T06:47:18+00:00",
       "selesai": null,
-      "step": 2,
-      "detik": 98,
-      "tok_est": 10420
+      "step": 4,
+      "detik": 269,
+      "tok_est": 17956
     }
   ],
   "step_berjalan": {
-    "no": 3,
-    "nama": "Service/logika domain",
-    "mulai": "2026-11-01T06:51:19+00:00"
+    "no": 5,
+    "nama": "UI + empat state",
+    "mulai": "2026-11-01T06:54:09+00:00"
   },
   "blueprint": {
     "sidik_awal": "618bcde2e46d608f",
@@ -505,10 +505,10 @@
     }
   ],
   "akumulasi": {
-    "detik": 2880,
-    "tok_est": 109836,
+    "detik": 3051,
+    "tok_est": 117372,
     "tok_terukur": 0,
-    "step": 16,
+    "step": 18,
     "fitur": 2
   },
   "fitur_aktif": {
@@ -620,9 +620,40 @@
           "app/Modules/Integrasi/Models/Employee.php",
           "app/Support/Scope/DataScope.php"
         ]
+      },
+      {
+        "no": 3,
+        "nama": "Service/logika domain",
+        "mulai": "2026-11-01T06:51:19+00:00",
+        "selesai": "2026-11-01T06:53:41+00:00",
+        "detik": 142,
+        "tok_est": 6300,
+        "muat": [
+          "app/Support/DocumentIssuer.php",
+          "app/Support/Documents/IssueDocumentJob.php",
+          "app/Modules/JpRiwayat/Services/JpRecap.php",
+          "app/Modules/JpRiwayat/Actions/UploadCertificate.php",
+          "app/Modules/JpRiwayat/Actions/VerifyCertificate.php",
+          "app/Modules/Kompetensi/Services/GapAggregator.php",
+          "app/Modules/Idp/Actions/PublishLearningPlan.php"
+        ]
+      },
+      {
+        "no": 4,
+        "nama": "Endpoint/controller/rute",
+        "mulai": "2026-11-01T06:53:41+00:00",
+        "selesai": "2026-11-01T06:54:09+00:00",
+        "detik": 29,
+        "tok_est": 1236,
+        "muat": [
+          "app/Modules/JpRiwayat/routes.php",
+          "app/Modules/JpRiwayat/Http/Controllers/CertificateDownloadController.php",
+          "app/Modules/JpRiwayat/Http/Controllers/LearningReportDownloadController.php",
+          "app/Modules/Fondasi/routes.php"
+        ]
       }
     ],
-    "detik": 98,
-    "tok_est": 10420
+    "detik": 269,
+    "tok_est": 17956
   }
 }

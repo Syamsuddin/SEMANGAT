@@ -48,6 +48,6 @@ class LearningReportContent implements DocumentContent
 
     public function readyUrl(Model $documentable): string
     {
-        return route('jp.overview');
+        return route('jp.records.mine');
     }
 }

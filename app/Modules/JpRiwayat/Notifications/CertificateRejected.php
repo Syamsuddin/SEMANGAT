@@ -23,7 +23,7 @@ class CertificateRejected extends Notification
             'jp_record_id' => $this->record->id,
             'message' => __('jp.notifications.rejected', ['title' => $this->record->title, 'jp' => $this->record->jp]),
             'note' => $this->record->reject_reason,
-            'url' => route('jp.overview'),
+            'url' => route('jp.records.mine'),
         ];
     }
 }

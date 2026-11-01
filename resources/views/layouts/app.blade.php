@@ -32,6 +32,15 @@
         <header class="flex items-center justify-between bg-navy px-4 py-3 text-surface lg:bg-surface lg:text-ink lg:shadow-card">
             <span class="text-base font-bold lg:hidden">{{ config('app.name') }}</span>
             <span class="hidden text-sm lg:block">{{ auth()->user()->displayName() }}</span>
+            <div class="flex items-center gap-1">
+            @php($unread = auth()->user()->unreadNotifications()->count())
+            <a href="{{ route('fondasi.notifications.index') }}" class="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-md"
+               aria-label="{{ $unread > 0 ? __('fondasi.notifications.unread_count', ['count' => $unread]) : __('fondasi.notifications.title') }}">
+                <x-heroicon-o-bell class="size-6" aria-hidden="true" />
+                @if ($unread > 0)
+                    <span class="absolute right-1 top-1 rounded-md bg-orange px-1 text-xs font-bold text-ink" aria-hidden="true">{{ $unread > 9 ? '9+' : $unread }}</span>
+                @endif
+            </a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-medium">
@@ -39,6 +48,7 @@
                     <span>{{ __('fondasi.auth.logout') }}</span>
                 </button>
             </form>
+            </div>
         </header>
 
         <main id="konten" class="mx-auto max-w-5xl px-4 pb-24 pt-4 lg:px-6 lg:pb-8 lg:pt-6">

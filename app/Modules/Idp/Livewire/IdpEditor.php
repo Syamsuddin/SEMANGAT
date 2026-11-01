@@ -18,6 +18,7 @@ use App\Modules\Idp\Models\IdpActivity;
 use App\Modules\Idp\Models\IdpItem;
 use App\Modules\Idp\Services\CompetentExpectation;
 use App\Modules\Idp\Services\DraftBuilder;
+use App\Modules\JpRiwayat\Actions\IssueLearningReport;
 use App\Modules\Kompetensi\Models\Competency;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\ValidationException;
@@ -26,7 +27,8 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 /**
- * IDP saya: susun (IDP-01/02/03) → ajukan → terbitkan Rencana Pembelajaran (IDP-05) → check-in (IDP-06) → refleksi (IDP-07).
+ * IDP saya: susun (IDP-01/02/03) → ajukan → terbitkan Rencana Pembelajaran (IDP-05) → check-in (IDP-06) → refleksi (IDP-07)
+ * → Laporan Hasil Pembelajaran (JPR-05, M12).
  *
  * @property-read Idp|null $idp
  * @property-read array<int, string> $workResultOptions
@@ -63,7 +65,7 @@ class IdpEditor extends Component
     public function idp(): ?Idp
     {
         return StartIdp::current((int) $this->user()->employee_id, (int) now()->year)
-            ?->load(['supervisor:id,name', 'items.competency:id,name', 'items.gap', 'items.workResult', 'items.mentor:id,name,nip', 'items.activities', 'checkins', 'learningPlan', 'employee.position']);
+            ?->load(['supervisor:id,name', 'items.competency:id,name', 'items.gap', 'items.workResult', 'items.mentor:id,name,nip', 'items.activities', 'checkins', 'learningPlan', 'learningReport', 'employee.position']);
     }
 
     /** @return array<int, string> */
@@ -172,6 +174,14 @@ class IdpEditor extends Component
         $close->reflect($this->user(), $this->current(), $this->reflection);
         $this->refreshIdp();
         $this->dispatch('toast', type: 'success', message: __('idp.editor.reflection_saved'));
+    }
+
+    public function issueReport(IssueLearningReport $issue): void
+    {
+        $this->resetErrorBag();
+        $issue->handle($this->user(), $this->current());
+        $this->refreshIdp();
+        $this->dispatch('toast', type: 'success', message: __('jp.report.queued'));
     }
 
     public function render(): View

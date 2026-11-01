@@ -9,6 +9,7 @@ use App\Modules\Fondasi\Listeners\RefreshAccountsAfterSync;
 use App\Modules\Fondasi\Livewire\EmployeeIndex;
 use App\Modules\Fondasi\Livewire\EmployeeShow;
 use App\Modules\Fondasi\Livewire\Home;
+use App\Modules\Fondasi\Livewire\NotificationCenter;
 use App\Modules\Fondasi\Livewire\TeamList;
 use App\Modules\Integrasi\Events\EmployeesSynced;
 use Illuminate\Auth\Events\Login;
@@ -42,6 +43,7 @@ class FondasiServiceProvider extends ServiceProvider
         Livewire::component('fondasi.employee-index', EmployeeIndex::class);
         Livewire::component('fondasi.employee-show', EmployeeShow::class);
         Livewire::component('fondasi.team-list', TeamList::class);
+        Livewire::component('fondasi.notification-center', NotificationCenter::class);
 
         Event::listen(EmployeesSynced::class, RefreshAccountsAfterSync::class);
         Event::listen(Login::class, RecordSuccessfulLogin::class);

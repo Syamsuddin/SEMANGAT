@@ -8,6 +8,7 @@ use App\Modules\Integrasi\Models\Employee;
 use App\Modules\JpRiwayat\Database\Factories\JpRecordFactory;
 use App\Modules\JpRiwayat\Enums\JpMode;
 use App\Modules\JpRiwayat\Enums\JpStatus;
+use App\Support\Scope\DataScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -75,6 +76,25 @@ class JpRecord extends Model
     public function scopeVisibleTo(Builder $query, User $user): Builder
     {
         return $query->whereIn('out_jp_records.employee_id', Employee::query()->visibleTo($user)->select('hr_employees.id'));
+    }
+
+    /**
+     * JPR-02: antrean verifikasi — `pending` milik pegawai lain dalam wilayah verifikator (pengelola: seluruh, koord. OPD: OPD-nya).
+     * Selaras JpRecordPolicy@verify.
+     *
+     * @param  Builder<JpRecord>  $query
+     * @return Builder<JpRecord>
+     */
+    public function scopeVerifiableBy(Builder $query, User $user): Builder
+    {
+        $scope = DataScope::for($user);
+
+        return $query->where('out_jp_records.status', JpStatus::Pending->value)
+            ->when($user->employee_id !== null, fn (Builder $q) => $q->where('out_jp_records.employee_id', '!=', $user->employee_id))
+            ->when(! $scope->seesAllEmployees(), fn (Builder $q) => $q->whereIn(
+                'out_jp_records.employee_id',
+                Employee::query()->whereIn('opd_id', $scope->opdIds() ?: [0])->select('hr_employees.id'),
+            ));
     }
 
     /**

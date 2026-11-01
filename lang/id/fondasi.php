@@ -111,4 +111,13 @@ return [
         'hash' => 'Sidik digital (SHA-256)',
         'note' => 'Cocokkan sidik digital dengan berkas yang Anda terima. Isi dokumen tidak ditampilkan di halaman ini.',
     ],
+    'notifications' => [
+        'title' => 'Notifikasi',
+        'empty' => 'Belum ada notifikasi.',
+        'unread' => 'Belum dibaca',
+        'unread_count' => 'Notifikasi, :count belum dibaca',
+        'mark_all' => 'Tandai semua dibaca',
+        'all_read' => 'Semua notifikasi ditandai dibaca.',
+        'document_ready' => ':type Anda sudah terbit dan siap diunduh.',
+    ],
 ];

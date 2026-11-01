@@ -13,7 +13,7 @@
         @endif
     </div>
 
-    <div wire:loading.delay wire:target="start,submit,publish,saveCheckin,saveReflection"><x-skeleton :lines="4" /></div>
+    <div wire:loading.delay wire:target="start,submit,publish,saveCheckin,saveReflection,issueReport"><x-skeleton :lines="4" /></div>
 
     @error('items') <x-error-state :message="$message" /> @enderror
 
@@ -171,11 +171,15 @@
             @endif
 
             {{-- Rencana Pembelajaran + teks "Kompeten" (IDP-05) --}}
-            @if ($idp->learningPlan)
+            @if (in_array($idp->status, [\App\Modules\Idp\Enums\IdpStatus::Active, \App\Modules\Idp\Enums\IdpStatus::Closed], true))
                 <x-card class="space-y-3">
-                    <x-button variant="secondary" :href="route('idp.plans.download', $idp)">
-                        <x-heroicon-o-arrow-down-tray class="size-4" aria-hidden="true" />{{ __('idp.editor.download') }}
-                    </x-button>
+                    @if ($idp->learningPlan)
+                        <x-button variant="secondary" :href="route('idp.plans.download', $idp)">
+                            <x-heroicon-o-arrow-down-tray class="size-4" aria-hidden="true" />{{ __('idp.editor.download') }}
+                        </x-button>
+                    @else
+                        <p class="flex items-center gap-2 text-sm text-info" role="status"><x-heroicon-o-clock class="size-4" aria-hidden="true" />{{ __('idp.editor.plan_processing') }}</p>
+                    @endif
                     <div x-data="{ text: @js($this->expectation) }" class="space-y-2">
                         <label for="expectation" class="block text-sm font-medium text-ink">{{ __('idp.expectation.title') }}</label>
                         <textarea id="expectation" x-model="text" rows="4" class="block w-full rounded-md border border-line bg-surface px-3 py-2 text-sm text-ink"></textarea>
@@ -226,6 +230,21 @@
                             <p class="font-medium text-success">{{ __('idp.editor.closed', ['date' => $idp->closed_at?->translatedFormat('j M Y')]) }}</p>
                             <p><span class="text-muted">{{ __('idp.attributes.closing_reflection') }}:</span> {{ $idp->closing_reflection }}</p>
                             <p><span class="text-muted">{{ __('idp.attributes.closing_assessment') }}:</span> {{ $idp->closing_assessment }}</p>
+                        </x-card>
+
+                        {{-- Laporan Hasil Pembelajaran (JPR-05) --}}
+                        <x-card class="space-y-2">
+                            <p class="text-sm text-muted">{{ __('jp.report.hint') }}</p>
+                            @if ($idp->learningReport)
+                                <x-button variant="secondary" :href="route('jp.reports.download', $idp)">
+                                    <x-heroicon-o-arrow-down-tray class="size-4" aria-hidden="true" />{{ __('jp.report.download') }}
+                                </x-button>
+                            @else
+                                @error('report') <x-error-state :message="$message" /> @enderror
+                                <x-confirm-dialog :title="__('jp.report.issue_title')" :message="__('jp.report.issue_body')" :confirm="__('jp.report.issue')" action="issueReport">
+                                    <x-slot:trigger><x-button class="w-full sm:w-auto">{{ __('jp.report.issue') }}</x-button></x-slot:trigger>
+                                </x-confirm-dialog>
+                            @endif
                         </x-card>
                     @else
                         <x-card class="space-y-3">
