@@ -20,7 +20,7 @@ Satu pengguna dapat memegang beberapa peran; cakupan = gabungan. Hak tidak perna
 
 ## Matriks akses
 
-Keterangan: **K** kelola · **S** data sendiri · **T** tim · **O** OPD · **A** agregat kabupaten (tanpa identitas individu bila n<5 `[ASUMSI]`) · **B** baca seluruh · **R** ringkasan · **—** tidak ada akses.
+Keterangan: **K** kelola · **S** data sendiri · **T** tim · **O** OPD · **A** agregat kabupaten (tanpa identitas individu bila n<5) · **B** baca seluruh · **R** ringkasan · **—** tidak ada akses.
 
 | Modul | asn | atasan | koord. OPD | fasilitator | pengelola | clo | dewan | auditor |
 |---|---|---|---|---|---|---|---|---|

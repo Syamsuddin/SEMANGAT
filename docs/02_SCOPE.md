@@ -25,16 +25,23 @@ Gerbang anti scope-creep. Permintaan yang tidak tercakup di sini → **berhenti 
 - Data asesmen & SKJ teknis tidak lengkap: sistem tetap berjalan dengan data berlabel indikatif.
 - Dipasang di server pemda sendiri (container).
 
-## Keputusan terbuka (dari Bab 16 rancang bangun) `[TERBUKA]`
-| ID | Pertanyaan | Dampak ke blueprint |
+## Keputusan (dari Bab 16 rancang bangun) — ditutup 2026-11-01
+Seluruh keputusan terbuka ditutup oleh keputusan pemilik produk 2026-11-01. Rincian teknis dicatat di dokumen pemilik masing-masing.
+
+| ID | Pertanyaan | Keputusan |
 |---|---|---|
-| Q-01 | Migrasi data/pengguna CORPU lama? | Tambah slice migrasi; risiko R-14 |
-| Q-02 | Data SKP via API? | Ganti adaptor `SkpFileImportAdapter` → API |
-| Q-03 / Q-08 | SK struktur & Perbup/SE Corpu sudah ada? | Isi awal registri M04 |
-| Q-04 | Evaluasi L3 sudah rutin? | Seberapa ringan fitur EVA-04 awal |
-| Q-05 | Kelengkapan SKJ teknis & hasil uji | Proporsi data indikatif |
-| Q-06 | Kesiapan server pegawai lokal sebagai lapisan data bersama | Lokasi domain kepegawaian/kompetensi |
-| Q-09 | Format integrasi platform LAN | Format ekspor INT-05/EVA-10 |
-| Q-10 | Kepanjangan "SEMANGAT" | Identitas produk |
-| Q-11 | Tahapan final | `docs/03_ROADMAP.md` masih USULAN |
-| NFR-12 | Retensi arsip daerah | Masa simpan audit (usulan ≥ 5 tahun) |
+| Q-01 | Migrasi data/pengguna CORPU lama? | **Tidak dimigrasi** — SEMANGAT CORPU memakai data baru (pegawai dari sinkron/impor, JP dicatat sejak aplikasi berjalan). Tidak ada slice migrasi; risiko R-14 gugur. |
+| Q-02 | Data SKP via API? | Impor berkas terkendali tetap jalur utama; API baca-saja diajukan ke pengelola e-Kinerja dan dipasang lewat adaptor `SkpSource` bila tersedia. |
+| Q-03 / Q-08 | SK struktur & Perbup/SE Corpu? | Diterbitkan pemda sebelum F7. Sampai itu `pengelola`/`clo`/`dewan_pengarah` lewat penugasan tercatat (`sys_role_assignments`). |
+| Q-04 | Evaluasi L3 sudah rutin? | Mulai ringan: ≤ 5 pertanyaan untuk atasan (EVA-04). |
+| Q-05 | Kelengkapan SKJ teknis & hasil uji | SKJ manajerial & sosiokultural diimpor lebih dulu, SKJ teknis bertahap; kekosongan tetap tampil berlabel Indikatif. |
+| Q-06 | Server pegawai lokal sebagai lapisan data bersama | Impor berkas jalur utama sampai API server pegawai stabil; adaptor `simpeg_api` siap. |
+| Q-09 | Format integrasi platform LAN | Ditunda; ekspor CSV/XLSX lebih dulu. |
+| Q-10 | Kepanjangan "SEMANGAT" | Tidak menghambat; nama produk tetap "SEMANGAT CORPU" tanpa kepanjangan di antarmuka sampai ditetapkan. |
+| Q-11 | Tahapan final | `docs/03_ROADMAP.md` **disetujui**: MVP = F1–F4; uji coba di 1–2 OPD setelah F4 sebelum F5. |
+| NFR-12 | Retensi arsip daerah | Audit log disimpan 5 tahun; dicocokkan dengan Jadwal Retensi Arsip daerah sebelum rilis (`docs/07_DATA_MODEL.md` § Retensi). |
+| Notifikasi (FON-07) | Kanal notifikasi | **In-app saja** (tabel `notifications`); surel & WhatsApp tidak dibangun. |
+| Unggahan | Pemindaian malware | **Tanpa pemindai** (server Linux); cukup pemeriksaan berkas standar (`docs/21_SECURITY_RULES.md` § Validasi input). |
+| Penyimpanan objek | Pengganti image MinIO | Abstraksi disk S3 dipertahankan; dev memakai disk lokal; produksi memakai object storage S3-kompatibel infrastruktur pemda, atau SeaweedFS/Garage bila dipasang sendiri (`docs/09_STACK.md`). |
+| PDF | Penerbitan dokumen | Mulai F4 `DocumentIssuer` menerbitkan lewat queue `documents` (`docs/08_ARCHITECTURE.md`); Rencana Pembelajaran F3 ikut dipindah. |
+| Nilai bawaan | Ambang & tenggat berlabel `[ASUMSI]` | Dipertahankan (n<5, N=3, sinkron 02.00 WITA, L3 T+3 bln +30 hari, sesi idle 30/15 menit) dan dipindah ke `config/semangat.php` saat fasenya disentuh. |

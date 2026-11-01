@@ -11,7 +11,7 @@ Docker Desktop/Engine + Compose v2, Git. (Tanpa Docker: PHP 8.3 + ekstensi `pdo_
 | `laravel.test` (runtime Sail PHP 8.3) | 8000 (`APP_PORT`) | kode di-mount; produksi tetap PHP-FPM + Nginx |
 | `mysql` (8.0) | 3306 | DB `semangat`; DB tes `semangat_test` dibuat `docker/mysql/create-test-database.sh` (hak `semangat_test%` untuk `--parallel`) |
 | `redis` | 6379 | queue/cache/session |
-| `minio` | 9000 / konsol 9001 | **belum ada di compose** — image `minio/minio` tidak tersedia di Docker Hub/quay (Okt 2026); pengganti S3-kompatibel menunggu keputusan (`docs/22`). Sementara dev: `FILESYSTEM_DISK=local`; tes memakai `Storage::fake` |
+| `minio` | 9000 / konsol 9001 | **belum ada di compose** — image `minio/minio` tidak tersedia di Docker Hub/quay (Okt 2026); diputuskan 2026-11-01: dev memakai `FILESYSTEM_DISK=local`, produksi object storage S3-kompatibel (`docs/09_STACK.md`); tes memakai `Storage::fake` |
 | `mailpit` | 8025 | tangkap surel dev |
 
 Catatan Codespaces/Docker-in-Docker: bila TCP antar-container di jaringan bridge diblokir, isi `DB_HOST`, `REDIS_HOST`, `MAIL_HOST` = `host.docker.internal` di `.env` lokal (port dipublikasikan ke host). Container Sail juga dapat tanpa akses internet keluar — jalankan Composer lewat container sekali-pakai `laravelsail/php83-composer`, npm lewat `node:20-alpine`.

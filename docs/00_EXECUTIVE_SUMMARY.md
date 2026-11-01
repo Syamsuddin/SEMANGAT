@@ -23,4 +23,4 @@ SEMANGAT CORPU adalah aplikasi web yang dirancang ulang dari nol (menggantikan C
 Seluruh ASN (PNS & PPPK) Pemkab HSS, atasan langsung, koordinator OPD, fasilitator, pengelola Corpu (Bidang PSDM), CLO, Dewan Pengarah, admin teknis, auditor (`docs/05_USER_ROLE.md`).
 
 ## Status
-Greenfield; blueprint diturunkan dari rancang bangun v0.1 (draf untuk tinjauan). Fase pembangunan berstatus USULAN (`docs/03_ROADMAP.md`); keputusan terbuka Q-01…Q-11 dicatat di `docs/02_SCOPE.md`.
+Greenfield; blueprint diturunkan dari rancang bangun v0.1 (draf untuk tinjauan). Roadmap disetujui (`docs/03_ROADMAP.md`); keputusan Q-01…Q-11 ditutup 2026-11-01 (`docs/02_SCOPE.md`).

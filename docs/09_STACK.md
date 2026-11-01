@@ -12,7 +12,7 @@ Pemilik daftar teknologi & versi. Pin versi minor di `composer.json`/`package.js
 | Bundler | Vite | 6.x, Node 20 LTS |
 | Basis data | MySQL | 8.0 (kompatibel MariaDB 10.11) |
 | Queue/cache/session | Redis | 7.x |
-| Penyimpanan objek | MinIO (S3) via `league/flysystem-aws-s3-v3` | terbaru stabil |
+| Penyimpanan objek | S3-kompatibel via `league/flysystem-aws-s3-v3` — produksi: object storage infrastruktur pemda, atau SeaweedFS/Garage bila dipasang sendiri (image MinIO tak tersedia; keputusan pemilik produk 2026-11-01); dev: disk lokal | terbaru stabil |
 | RBAC | `spatie/laravel-permission` | 6.x |
 | Auth & 2FA | Laravel Fortify | 1.x |
 | PDF | `barryvdh/laravel-dompdf` | 3.x |

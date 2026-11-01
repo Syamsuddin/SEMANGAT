@@ -373,29 +373,15 @@
   "assumptions": [
     "Metrik sukses utama: % IDP disetujui & ditutup",
     "Modul buatan sendiri di app/Modules tanpa nwidart",
-    "Pest 3, Larastan level 6, spatie/laravel-permission, Laravel Fortify (2FA), barryvdh/laravel-dompdf + simplesoftwareio/simple-qrcode",
+    "Pest 3, Larastan level 6, spatie/laravel-permission, Laravel Fortify (2FA), barryvdh/laravel-dompdf + bacon/bacon-qr-code (PNG via GD)",
     "SSO pemda belum ada: login NIP + kata sandi, adaptor SSO disiapkan",
     "Fitur AI (IDP-09, KMS-06) ditunda",
-    "Roadmap F1-F8 berstatus USULAN sampai Q-11 diputuskan",
+    "Roadmap F1-F8 disetujui (Q-11, 2026-11-01); MVP F1-F4 lalu pilot 1-2 OPD",
     "Bentuk respons API server pegawai = kolom templat impor (GET /pegawai?page=N), menunggu Q-06",
     "Impor berkas pegawai bukan snapshot penuh (tak menonaktifkan yang tak tercantum); sinkron API snapshot penuh",
     "Penugasan peran manual bercakupan di sys_role_assignments (keputusan pemilik produk 2026-10-29)"
   ],
-  "open_questions": [
-    "Q-01 migrasi CORPU lama",
-    "Q-02 API SKP",
-    "Q-03 SK struktur Corpu",
-    "Q-04 evaluasi L3 sudah rutin?",
-    "Q-05 kelengkapan SKJ teknis & hasil uji",
-    "Q-06 kesiapan server pegawai lokal",
-    "Q-08 Perbup/SE Corpu",
-    "Q-09 integrasi platform LAN",
-    "Q-10 akronim SEMANGAT",
-    "Q-11 tahapan final",
-    "NFR-12 retensi arsip",
-    "Aktivasi akun & kata sandi awal pegawai",
-    "Pengganti image MinIO (minio/minio tak tersedia)"
-  ],
+  "open_questions": [],
   "phases": {
     "F1": {
       "status": "accepted",
@@ -428,5 +414,23 @@
       "status": "pending"
     }
   },
-  "archive_pattern": "23-*.md"
+  "archive_pattern": "23-*.md",
+  "decisions": [
+    "2026-11-01 Q-01: CORPU lama tidak dimigrasi, data baru",
+    "2026-11-01 Q-02/Q-06: impor berkas jalur utama; API via adaptor bila tersedia",
+    "2026-11-01 Q-03/Q-08: SK & Perbup sebelum F7; sementara penugasan tercatat",
+    "2026-11-01 Q-04: L3 ringan <=5 pertanyaan",
+    "2026-11-01 Q-05: SKJ manajerial/sosiokultural dulu, teknis bertahap",
+    "2026-11-01 Q-09: ditunda, ekspor CSV/XLSX",
+    "2026-11-01 Q-10: nama SEMANGAT CORPU tanpa kepanjangan",
+    "2026-11-01 Q-11: roadmap disetujui, MVP F1-F4 + pilot 1-2 OPD",
+    "2026-11-01 NFR-12: audit log 5 tahun",
+    "2026-11-01 FON-07: notifikasi in-app saja",
+    "2026-11-01 Unggahan: tanpa pemindai malware, cek berkas standar",
+    "2026-11-01 Penyimpanan: S3-kompatibel pemda / SeaweedFS-Garage; dev disk lokal",
+    "2026-11-01 Aktivasi akun: tautan sekali pakai + wajib ganti sandi",
+    "2026-11-01 Mentor via NIP: pengecualian visibleTo tertulis di docs/21",
+    "2026-11-01 PDF via queue documents mulai F4",
+    "2026-11-01 Nilai [ASUMSI] dipertahankan, pindah ke config/semangat.php bertahap"
+  ]
 }
