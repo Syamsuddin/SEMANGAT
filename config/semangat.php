@@ -48,6 +48,11 @@ return [
     // Agregat clo/dewan: sel dengan n < ambang disamarkan (docs/21) [ASUMSI].
     'aggregate_min_n' => 5,
 
+    // PDF terbitan (FON-09) via App\Support\DocumentIssuer; produksi: MinIO (s3).
+    'documents' => [
+        'disk' => env('SEMANGAT_DOCUMENT_DISK', env('FILESYSTEM_DISK', 'local')),
+    ],
+
     'verify_base_url' => env('SEMANGAT_VERIFY_BASE_URL', env('APP_URL')),
 
     'features' => [],

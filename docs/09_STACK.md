@@ -12,11 +12,11 @@ Pemilik daftar teknologi & versi. Pin versi minor di `composer.json`/`package.js
 | Bundler | Vite | 6.x, Node 20 LTS |
 | Basis data | MySQL | 8.0 (kompatibel MariaDB 10.11) |
 | Queue/cache/session | Redis | 7.x |
-| Penyimpanan objek | MinIO (S3) via `league/flysystem-aws-s3-v3` | terbaru stabil |
+| Penyimpanan objek | S3-kompatibel via `league/flysystem-aws-s3-v3` — produksi: object storage infrastruktur pemda, atau SeaweedFS/Garage bila dipasang sendiri (image MinIO tak tersedia; keputusan pemilik produk 2026-11-01); dev: disk lokal | terbaru stabil |
 | RBAC | `spatie/laravel-permission` | 6.x |
 | Auth & 2FA | Laravel Fortify | 1.x |
 | PDF | `barryvdh/laravel-dompdf` | 3.x |
-| QR | `simplesoftwareio/simple-qrcode` | 4.x |
+| QR | `bacon/bacon-qr-code` (PNG via `GDLibRenderer`, butuh ext-gd; sudah dipakai Fortify — `simple-qrcode` 4.x bentrok dengan bacon ^3, keputusan pemilik produk 2026-11-01) | 3.x |
 | Impor/ekspor berkas | `openspout/openspout` | 4.x |
 | Tes | Pest | 3.x (+ `pest-plugin-laravel`, `pest-plugin-livewire`, arch) |
 | Analisis statis | Larastan | 3.x, level 6 |

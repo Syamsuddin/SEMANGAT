@@ -181,6 +181,8 @@ idp_item_id FK, portion tinyint (10/20/70), title varchar(200), program_id FK→
 ### pln_idp_checkins (IDP-06)
 idp_id FK, checkin_on date, quarter tinyint, employee_note text, supervisor_note text NULL, progress json ({item_id: pct}).
 
+Catatan migrasi F3: UNIQUE "di antara yang belum `cancelled`" ditegakkan lewat kolom bangkitan `pln_idps.open_period_year` (STORED, NULL bila `cancelled`) + UNIQUE(employee_id, open_period_year). `supervisor_id` NULL selama `draft` (dibekukan saat ajukan). Tabel anak (`pln_idp_items`, `_activities`, `_checkins`) `ON DELETE CASCADE` ke induknya; `pln_idp_items.gap_id` `ON DELETE SET NULL` karena `cmp_gaps` dihapus saat kesenjangan tertutup. `pln_idp_activities.program_id` tanpa FK sampai `lrn_programs` ada (F5). `pln_idp_checkins` UNIQUE(idp_id, quarter). Tabel bawaan `notifications` (kanal `database`) dimigrasi di F3 untuk notifikasi IDP.
+
 ## F4 — JP & riwayat
 
 ### out_jp_records (CatatanJP)
@@ -202,7 +204,7 @@ Aturan: saldo JP = SUM(jp) WHERE status='verified'. Indeks: (employee_id, year, 
 employee_id FK, jp_record_id FK UNIQUE, issuer varchar(200), number varchar(100) NULL, file_path varchar(255), sha256 char(64), is_internal boolean (internal → punya `out_issued_documents`). UNIQUE(employee_id, sha256) — deteksi duplikat.
 
 ### pln_jp_conversion_rules (KAT-06, dikelola pengelola)
-activity_type varchar(40), unit varchar(20) (`hour`,`day`,`session`,`activity`), jp_per_unit decimal(4,1), max_jp decimal(5,1) NULL, effective_from date. Nilai konkret `[TERBUKA]` — menunggu ketentuan verifikasi JP (Bab 13.1).
+activity_type varchar(40), unit varchar(20) (`hour`,`day`,`session`,`activity`), jp_per_unit decimal(4,1), max_jp decimal(5,1) NULL, effective_from date. Nilai konkret ditetapkan pengelola di F5 (KAT-06). Sampai itu (F4) JP sertifikat luar diisi pegawai sesuai sertifikat lalu dikonfirmasi/dikoreksi verifikator (keputusan pemilik produk 2026-11-01).
 
 ## F5+ — tabel inti fase berikutnya (rincikan kolom saat fasenya dimulai, lewat rute "Ubah skema DB")
 | Tabel | Kunci & relasi | Catatan |
@@ -226,4 +228,4 @@ activity_type varchar(40), unit varchar(20) (`hour`,`day`,`session`,`activity`),
 | `lrn_expert_directory` | employee_id, competency_id, verified_by | KMS-03 |
 
 ## Retensi
-Audit log ≥ 5 tahun (usulan; NFR-12 `[TERBUKA]`). Riwayat bangkom pegawai nonaktif disimpan sesuai ketentuan arsip.
+Audit log 5 tahun (NFR-12, keputusan pemilik produk 2026-11-01; dicocokkan dengan Jadwal Retensi Arsip daerah sebelum rilis). Riwayat bangkom pegawai nonaktif disimpan sesuai ketentuan arsip.

@@ -10,6 +10,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "ext-gd": "*",
+        "bacon/bacon-qr-code": "^3.0",
+        "barryvdh/laravel-dompdf": "^3.1",
         "blade-ui-kit/blade-heroicons": "^2.5",
         "laravel/fortify": "^1.25",
         "laravel/framework": "^12.0",

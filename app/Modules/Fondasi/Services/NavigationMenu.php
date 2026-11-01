@@ -16,11 +16,17 @@ class NavigationMenu
 
         if ($user->employee_id !== null) {
             $items[] = ['label' => __('kompetensi.nav.profile'), 'route' => 'kompetensi.profile.show', 'icon' => 'academic-cap', 'active' => 'kompetensi.profile.*'];
+            $items[] = ['label' => __('idp.nav.mine'), 'route' => 'idp.plans.mine', 'icon' => 'clipboard-document-list', 'active' => 'idp.plans.*'];
         }
 
         if ($user->hasRole(Role::Atasan->value)) {
             $items[] = ['label' => __('fondasi.nav.team'), 'route' => 'fondasi.team.index', 'icon' => 'user-group', 'active' => 'fondasi.team.*'];
             $items[] = ['label' => __('kompetensi.nav.team'), 'route' => 'kompetensi.team.index', 'icon' => 'chart-bar-square', 'active' => 'kompetensi.team.*'];
+            $items[] = ['label' => __('idp.nav.team'), 'route' => 'idp.team.index', 'icon' => 'document-check', 'active' => 'idp.team.*'];
+        }
+
+        if ($user->can(Permission::IdpViewUnlinked->value) && ! $user->hasRole(Role::Atasan->value)) {
+            $items[] = ['label' => __('idp.nav.unlinked'), 'route' => 'idp.unlinked.index', 'icon' => 'link-slash', 'active' => 'idp.unlinked.*'];
         }
 
         if ($user->can(Permission::CompetencyViewAggregate->value)) {

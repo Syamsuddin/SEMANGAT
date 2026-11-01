@@ -15,7 +15,7 @@ Pemilik alur. Peran: `docs/05_USER_ROLE.md`. Tabel/kolom: `docs/07_DATA_MODEL.md
 | 7 Umpan balik | pergantian periode | sistem, CLO | bahan forum strategis berikutnya |
 
 ## 2. Sinkronisasi data sumber (M02)
-1. Job terjadwal (harian 02:00 WITA `[ASUMSI]`) atau tombol pengelola memanggil adaptor sumber.
+1. Job terjadwal (harian 02:00 WITA) atau tombol pengelola memanggil adaptor sumber.
 2. Adaptor menulis upsert idempoten berkunci `(source, external_id)`; setiap baris mengisi `source`, `synced_at`.
 3. Pegawai yang hilang dari sumber/pensiun/pindah → `status=inactive`, akun dinonaktifkan; riwayat tetap.
 4. Turunan dihitung ulang: `supervisor_id`, peran `atasan`, kesenjangan.
@@ -41,7 +41,7 @@ Pemilik alur. Peran: `docs/05_USER_ROLE.md`. Tabel/kolom: `docs/07_DATA_MODEL.md
 - Status: `draft → submitted → approved → active → closed` (+ `returned` kembali ke `draft`; `cancelled` hanya oleh pengelola beralasan).
 
 ## 5. HCDP ⇄ IDP (M05)
-Kebutuhan muncul di ≥N IDP OPD (N=3 `[ASUMSI]`) tetapi tidak ada di HCDP → ditandai di HCDP; butir HCDP tanpa IDP pendukung → ditandai. Non-learning problem dicatat sebagai rekomendasi, tidak jadi program. Pengesahan: `draft → in_forum → minuted (BA) → ratified`.
+Kebutuhan muncul di ≥N IDP OPD (N=3) tetapi tidak ada di HCDP → ditandai di HCDP; butir HCDP tanpa IDP pendukung → ditandai. Non-learning problem dicatat sebagai rekomendasi, tidak jadi program. Pengesahan: `draft → in_forum → minuted (BA) → ratified`.
 
 ## 6. JP & sertifikat (M12)
 1. Otomatis: kelas selesai (M09), sesi coaching (M10), pembelajaran tempat kerja disetujui (M08) → `out_jp_records` status `verified`.
@@ -53,7 +53,7 @@ Kebutuhan muncul di ≥N IDP OPD (N=3 `[ASUMSI]`) tetapi tidak ada di HCDP → d
 1. Akhir program: L1 (3–5 pertanyaan) & L2 (pre/post) terisi.
 2. T + 3 bulan: pengingat ke atasan & asn.
 3. Atasan isi formulir ≤5 pertanyaan (ponsel); asn isi refleksi pasangan. Satu formulir L3 per program per pegawai.
-4. Lewat tenggat (T + 3 bln + 30 hari `[ASUMSI]`) → status tampil di dashboard OPD.
+4. Lewat tenggat (T + 3 bln + 30 hari) → status tampil di dashboard OPD.
 5. Hasil masuk check-in IDP, Laporan, dan mutu program. Klaim dampak berbahasa "terkait", bukan "disebabkan".
 
 ## 8. Forum & keputusan (M04)

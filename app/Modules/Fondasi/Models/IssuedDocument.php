@@ -11,12 +11,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * Registri PDF terbitan (FON-09). Dibuat hanya oleh App\Support\DocumentIssuer (F3).
+ * Registri PDF terbitan (FON-09). Dibuat hanya oleh App\Support\DocumentIssuer.
  *
  * @property int $id
  * @property string $uuid
  * @property DocumentType $type
  * @property int|null $employee_id
+ * @property string $documentable_type
+ * @property int $documentable_id
+ * @property string $file_path
  * @property string $sha256
  * @property Carbon $issued_at
  * @property Carbon|null $revoked_at
