@@ -25,15 +25,15 @@
     {
       "mulai": "2026-11-01T06:47:18+00:00",
       "selesai": null,
-      "step": 4,
-      "detik": 269,
-      "tok_est": 17956
+      "step": 5,
+      "detik": 509,
+      "tok_est": 37017
     }
   ],
   "step_berjalan": {
-    "no": 5,
-    "nama": "UI + empat state",
-    "mulai": "2026-11-01T06:54:09+00:00"
+    "no": 6,
+    "nama": "Tes",
+    "mulai": "2026-11-01T06:58:09+00:00"
   },
   "blueprint": {
     "sidik_awal": "618bcde2e46d608f",
@@ -505,10 +505,10 @@
     }
   ],
   "akumulasi": {
-    "detik": 3051,
-    "tok_est": 117372,
+    "detik": 3291,
+    "tok_est": 136433,
     "tok_terukur": 0,
-    "step": 18,
+    "step": 19,
     "fitur": 2
   },
   "fitur_aktif": {
@@ -651,9 +651,28 @@
           "app/Modules/JpRiwayat/Http/Controllers/LearningReportDownloadController.php",
           "app/Modules/Fondasi/routes.php"
         ]
+      },
+      {
+        "no": 5,
+        "nama": "UI + empat state",
+        "mulai": "2026-11-01T06:54:09+00:00",
+        "selesai": "2026-11-01T06:58:09+00:00",
+        "detik": 240,
+        "tok_est": 19061,
+        "muat": [
+          "docs/26_UI_CONVENTIONS.md",
+          "app/Modules/JpRiwayat/Livewire/JpOverview.php",
+          "app/Modules/JpRiwayat/resources/views/livewire/jp-overview.blade.php",
+          "app/Modules/JpRiwayat/resources/views/livewire/certificate-verification-list.blade.php",
+          "app/Modules/JpRiwayat/resources/views/livewire/jp-recap-report.blade.php",
+          "app/Modules/JpRiwayat/resources/views/pdf/learning-report.blade.php",
+          "lang/id/jp.php",
+          "app/Modules/Idp/resources/views/livewire/idp-editor.blade.php",
+          "app/Modules/Idp/resources/views/livewire/team-approval-list.blade.php"
+        ]
       }
     ],
-    "detik": 269,
-    "tok_est": 17956
+    "detik": 509,
+    "tok_est": 37017
   }
 }

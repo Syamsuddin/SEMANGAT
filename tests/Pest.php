@@ -14,6 +14,7 @@ use App\Modules\Integrasi\Models\SkpSummary;
 use App\Modules\Integrasi\Models\SkpWorkResult;
 use App\Modules\Kompetensi\Models\JobStandard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -164,4 +165,22 @@ function idpWithItems(Employee $employee, int $items = 2, string $state = 'draft
     }
 
     return $idp->refresh();
+}
+
+/** Berkas PDF sertifikat palsu dengan isi PDF nyata (lolos cek MIME dari isi, JPR-02). $seed membedakan hash. */
+function certificatePdf(string $seed = 'a'): UploadedFile
+{
+    return UploadedFile::fake()->createWithContent('sertifikat.pdf', "%PDF-1.4\n% sertifikat {$seed}\n%%EOF\n");
+}
+
+/** Isian unggah sertifikat luar yang sah (JPR-02). */
+function jpInput(array $overrides = []): array
+{
+    $year = (int) now()->year;
+
+    return $overrides + [
+        'title' => 'Pelatihan Analisis Kebijakan', 'issuer' => 'BPSDM Provinsi', 'number' => 'SRT-001',
+        'portion' => 10, 'mode' => 'classical', 'jp' => '12',
+        'activity_start' => now()->subDays(10)->toDateString(), 'activity_end' => now()->subDays(8)->toDateString(),
+    ];
 }

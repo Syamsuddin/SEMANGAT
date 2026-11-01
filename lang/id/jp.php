@@ -95,6 +95,7 @@ return [
     ],
     'errors' => [
         'duplicate' => 'Sertifikat ini sudah pernah diunggah.',
+        'file_type' => 'Isi berkas harus berupa PDF, JPG, atau PNG.',
         'report_exists' => 'Laporan Hasil Pembelajaran untuk IDP ini sudah terbit.',
     ],
     'notifications' => [

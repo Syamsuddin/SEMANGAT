@@ -2,14 +2,19 @@
 
 use App\Modules\Fondasi\Enums\DocumentType;
 use App\Modules\Fondasi\Models\IssuedDocument;
+use App\Modules\Fondasi\Notifications\DocumentReady;
 use App\Modules\Idp\Actions\PublishLearningPlan;
+use App\Modules\Idp\Documents\LearningPlanContent;
 use App\Modules\Idp\Enums\IdpStatus;
 use App\Modules\Idp\Livewire\IdpEditor;
 use App\Modules\Idp\Models\IdpActivity;
 use App\Modules\Integrasi\Enums\PositionTier;
 use App\Modules\Integrasi\Models\Employee;
 use App\Modules\Integrasi\Models\Position;
+use App\Support\Documents\IssueDocumentJob;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
@@ -49,7 +54,9 @@ it('IDP-05 isi PDF: kompetensi prioritas, tautan RHK, aktivitas 10:20:70, target
         $data = $view->getData();
     });
 
-    $document = app(PublishLearningPlan::class)->handle($this->user, $this->idp);
+    app(PublishLearningPlan::class)->handle($this->user, $this->idp);
+    $document = $this->idp->refresh()->learningPlan;
+    expect($document)->not->toBeNull();
     $html = view('idp::pdf.learning-plan', $data)->render();
 
     expect($html)
@@ -81,7 +88,8 @@ it('IDP-05 teks ekspektasi "Kompeten" sesuai jenjang jabatan tampil dengan tombo
 ])->group('idp');
 
 it('IDP-05 halaman verifikasi publik menampilkan status dokumen tanpa isi', function () {
-    $document = app(PublishLearningPlan::class)->handle($this->user, $this->idp);
+    app(PublishLearningPlan::class)->handle($this->user, $this->idp);
+    $document = $this->idp->refresh()->learningPlan;
 
     $this->get(route('fondasi.documents.verify', $document->uuid))
         ->assertOk()->assertSee($this->employee->name)->assertSee($document->sha256)
@@ -104,4 +112,30 @@ it('IDP-05 hanya pemilik & hanya IDP approved yang dapat diterbitkan', function 
     $this->idp->update(['status' => IdpStatus::Submitted]);
     expect(fn () => app(PublishLearningPlan::class)->handle($this->user, $this->idp->refresh()))->toThrow(AuthorizationException::class);
     expect(IssuedDocument::query()->count())->toBe(0);
+})->group('idp');
+
+it('IDP-05 penerbitan diantrekan di queue documents; status active segera, PDF menyusul dan pegawai dikabari (FON-07)', function () {
+    Queue::fake();
+
+    app(PublishLearningPlan::class)->handle($this->user, $this->idp);
+
+    expect($this->idp->refresh()->status)->toBe(IdpStatus::Active)
+        ->and(IssuedDocument::query()->count())->toBe(0);
+    Queue::assertPushedOn('documents', IssueDocumentJob::class, fn (IssueDocumentJob $job) => $job->documentable->is($this->idp));
+
+    Livewire::actingAs($this->user)->test(IdpEditor::class)
+        ->assertSee('Rencana Pembelajaran sedang diterbitkan')
+        ->assertDontSee('Unduh Rencana Pembelajaran');
+})->group('idp');
+
+it('IDP-05 job dokumen menerbitkan sekali (idempoten) dan mengirim notifikasi DocumentReady', function () {
+    Notification::fake();
+    $this->idp->update(['status' => IdpStatus::Active]);
+    $job = new IssueDocumentJob(LearningPlanContent::class, $this->idp, $this->employee->id, $this->user);
+
+    app()->call([$job, 'handle']);
+    app()->call([$job, 'handle']);
+
+    expect(IssuedDocument::query()->where('type', DocumentType::LearningPlan->value)->count())->toBe(1);
+    Notification::assertSentToTimes($this->user, DocumentReady::class, 1);
 })->group('idp');

@@ -146,10 +146,9 @@ class Idp extends Model
     /** @return MorphOne<IssuedDocument, $this> */
     private function issuedDocument(DocumentType $type): MorphOne
     {
+        // Filter di closure ofMany agar ikut masuk subkueri MAX — filter di luar tidak mempersempit agregatnya.
         return $this->morphOne(IssuedDocument::class, 'documentable')
-            ->where('type', $type->value)
-            ->whereNull('revoked_at')
-            ->latestOfMany('issued_at');
+            ->ofMany(['issued_at' => 'max', 'id' => 'max'], fn ($q) => $q->where('type', $type->value)->whereNull('revoked_at'));
     }
 
     protected static function newFactory(): IdpFactory

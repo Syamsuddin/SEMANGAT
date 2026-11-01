@@ -18,7 +18,7 @@ arch('tidak ada dd/dump/ray/var_dump')
     ->group('arch');
 
 arch('Controller & Livewire tidak memakai DB:: langsung')
-    ->expect(['App\Modules\Fondasi\Livewire', 'App\Modules\Fondasi\Http', 'App\Modules\Integrasi\Livewire', 'App\Modules\Integrasi\Http', 'App\Modules\Kompetensi\Livewire', 'App\Modules\Idp\Livewire', 'App\Modules\Idp\Http'])
+    ->expect(['App\Modules\Fondasi\Livewire', 'App\Modules\Fondasi\Http', 'App\Modules\Integrasi\Livewire', 'App\Modules\Integrasi\Http', 'App\Modules\Kompetensi\Livewire', 'App\Modules\Idp\Livewire', 'App\Modules\Idp\Http', 'App\Modules\JpRiwayat\Livewire', 'App\Modules\JpRiwayat\Http'])
     ->not->toUse('Illuminate\Support\Facades\DB')
     ->group('arch');
 
@@ -34,7 +34,7 @@ arch('Contract sumber hanya antarmuka')
     ->group('arch');
 
 arch('Service murni tidak memakai Http')
-    ->expect(['App\Modules\Integrasi\Services', 'App\Modules\Kompetensi\Services', 'App\Modules\Idp\Services'])
+    ->expect(['App\Modules\Integrasi\Services', 'App\Modules\Kompetensi\Services', 'App\Modules\Idp\Services', 'App\Modules\JpRiwayat\Services'])
     ->not->toUse('Illuminate\Support\Facades\Http')
     ->group('arch');
 
@@ -124,4 +124,9 @@ arch('PDF & QR hanya lewat App\\Support\\DocumentIssuer (docs/12, FON-09)')
     ->expect('App')
     ->not->toUse(['Barryvdh\\DomPDF', 'BaconQrCode'])
     ->ignoring('App\\Support\\DocumentIssuer')
+    ->group('arch');
+
+arch('isi dokumen terbitan mengimplementasi DocumentContent (antrean documents, keputusan PDF 2026-11-01)')
+    ->expect(['App\\Modules\\Idp\\Documents', 'App\\Modules\\JpRiwayat\\Documents'])
+    ->toImplement('App\\Support\\Documents\\DocumentContent')
     ->group('arch');

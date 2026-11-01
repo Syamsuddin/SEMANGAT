@@ -26,6 +26,8 @@ use Illuminate\Validation\ValidationException;
  */
 class UploadCertificate
 {
+    private const ALLOWED_MIME = ['application/pdf', 'image/jpeg', 'image/png'];
+
     public function __construct(private readonly CertificateStore $files, private readonly AuditLogger $audit) {}
 
     /** @param  array<string, mixed>  $input */
@@ -50,6 +52,12 @@ class UploadCertificate
 
         /** @var UploadedFile $file */
         $contents = (string) $file->get();
+
+        // Cek MIME nyata dari isi berkas (docs/21) — tidak bergantung pada nama/ekstensi atau MIME yang dilaporkan klien.
+        if (! in_array($this->files->mimeType($contents), self::ALLOWED_MIME, true)) {
+            throw ValidationException::withMessages(['file' => __('jp.errors.file_type')]);
+        }
+
         $sha256 = hash('sha256', $contents);
         $this->rejectDuplicate($employeeId, $sha256, $data);
 
