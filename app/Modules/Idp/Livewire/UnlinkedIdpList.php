@@ -7,6 +7,7 @@ use App\Modules\Fondasi\Models\User;
 use App\Modules\Idp\Models\Idp;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -23,9 +24,31 @@ class UnlinkedIdpList extends Component
         abort_unless($this->user()->can(Permission::IdpViewUnlinked->value), 403);
     }
 
-    /** @return LengthAwarePaginator<int, Idp> */
+    public bool $failed = false;
+
+    /** @return LengthAwarePaginator<int, Idp>|null */
     #[Computed]
-    public function idps(): LengthAwarePaginator
+    public function idps(): ?LengthAwarePaginator
+    {
+        try {
+            $this->failed = false;
+
+            return $this->query();
+        } catch (QueryException $e) {
+            report($e);
+            $this->failed = true;
+
+            return null;
+        }
+    }
+
+    public function retry(): void
+    {
+        unset($this->idps);
+    }
+
+    /** @return LengthAwarePaginator<int, Idp> */
+    private function query(): LengthAwarePaginator
     {
         return Idp::query()->visibleTo($this->user())->unlinked()
             ->with(['employee:id,name,nip,opd_id,position_id', 'employee.position:id,name', 'employee.opd:id,name'])

@@ -4,7 +4,10 @@
 
     <div wire:loading.delay><x-skeleton :lines="4" /></div>
 
-    @if ($this->idps->isEmpty())
+    @php($idps = $this->idps)
+    @if ($idps === null)
+        <x-error-state :message="__('idp.unlinked_list.error')" retry="retry" />
+    @elseif ($idps->isEmpty())
         <x-empty-state icon="link" :title="__('idp.unlinked_list.empty_title')">
             <p class="text-xs text-muted">{{ __('idp.unlinked_list.empty_body') }}</p>
         </x-empty-state>
@@ -20,7 +23,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-line">
-                @foreach ($this->idps as $idp)
+                @foreach ($idps as $idp)
                     <tr wire:key="u-{{ $idp->id }}">
                         <td class="px-3 py-2">{{ $idp->employee->name }} <span class="block text-xs text-muted">{{ $idp->employee->nip }}</span></td>
                         <td class="px-3 py-2">{{ $idp->employee->position?->name ?? '—' }}</td>
@@ -31,7 +34,7 @@
                 @endforeach
             </tbody>
             <x-slot:cards>
-                @foreach ($this->idps as $idp)
+                @foreach ($idps as $idp)
                     <li wire:key="uc-{{ $idp->id }}" class="rounded-lg border border-line bg-surface p-4 shadow-card">
                         <p class="font-medium text-ink">{{ $idp->employee->name }}</p>
                         <p class="text-xs text-muted">{{ $idp->employee->position?->name ?? '—' }} · {{ $idp->employee->opd?->name ?? '—' }}</p>
@@ -43,6 +46,6 @@
                 @endforeach
             </x-slot:cards>
         </x-table>
-        {{ $this->idps->links() }}
+        {{ $idps->links() }}
     @endif
 </div>

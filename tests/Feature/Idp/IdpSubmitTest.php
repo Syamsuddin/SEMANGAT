@@ -5,6 +5,7 @@ use App\Modules\Idp\Actions\SubmitIdp;
 use App\Modules\Idp\Enums\IdpStatus;
 use App\Modules\Idp\Livewire\IdpEditor;
 use App\Modules\Idp\Livewire\UnlinkedIdpList;
+use App\Modules\Idp\Models\Idp;
 use App\Modules\Idp\Notifications\IdpSubmitted;
 use App\Modules\Integrasi\Models\Employee;
 use App\Modules\Integrasi\Models\OrgUnit;
@@ -68,4 +69,15 @@ it('IDP-02 pegawai tanpa atasan langsung tidak dapat mengajukan', function () {
 
     expect(fn () => app(SubmitIdp::class)->handle(employeeUser($employee), $idp))
         ->toThrow(ValidationException::class, 'atasan langsung');
+})->group('idp');
+
+it('IDP-10 daftar tanpa tautan menampilkan state gagal dengan "Coba lagi" bila data gagal dimuat', function () {
+    $atasan = userWithRole(Role::Atasan);
+    Idp::addGlobalScope('gagal-uji', fn ($q) => $q->whereRaw('kolom_tidak_ada = 1'));
+
+    try {
+        Livewire::actingAs($atasan)->test(UnlinkedIdpList::class)->assertSee('Daftar IDP gagal dimuat.')->assertSee('Coba lagi');
+    } finally {
+        Idp::clearBootedModels();
+    }
 })->group('idp');

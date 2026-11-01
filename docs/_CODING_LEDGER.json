@@ -3,7 +3,7 @@
   "genesis": "2026-10-30T14:34:11+00:00",
   "perintah": {
     "test": "./vendor/bin/sail artisan test",
-    "run": "./vendor/bin/sail composer run dev",
+    "run": "composer run dev",
     "migrate": "./vendor/bin/sail artisan migrate",
     "lint": "./vendor/bin/sail bin pint --test && ./vendor/bin/sail bin phpstan analyse"
   },
@@ -14,14 +14,29 @@
       "step": 7,
       "detik": 1289,
       "tok_est": 54817
+    },
+    {
+      "mulai": "2026-11-01T05:43:42+00:00",
+      "selesai": null,
+      "step": 7,
+      "detik": 1493,
+      "tok_est": 44599
     }
   ],
   "step_berjalan": null,
   "blueprint": {
     "sidik_awal": "618bcde2e46d608f",
-    "sidik": "618bcde2e46d608f",
+    "sidik": "13698e85eaf500c1",
     "dokumen": 27,
-    "disegel": "2026-10-30T14:34:11+00:00"
+    "disegel": "2026-11-01T05:43:42+00:00",
+    "sidik_sebelumnya": "618bcde2e46d608f",
+    "riwayat": [
+      {
+        "dari": "618bcde2e46d608f",
+        "ke": "13698e85eaf500c1",
+        "pada": "2026-11-01T05:43:42+00:00"
+      }
+    ]
   },
   "riwayat_fitur": [
     {
@@ -283,13 +298,201 @@
         "Bucket MinIO semangat-sensitive + flysystem-s3 untuk produksi"
       ],
       "selesai": "2026-10-30T15:19:42+00:00"
+    },
+    {
+      "fitur": "F3 IDP poros",
+      "rute": "Fitur baru (vertical slice)",
+      "mulai": "2026-11-01T05:46:34+00:00",
+      "rencana": [
+        "composer.json",
+        "composer.lock",
+        "config/semangat.php",
+        "config/filesystems.php",
+        "bootstrap/providers.php",
+        "app/Modules/Idp",
+        "app/Modules/Fondasi/Database/Migrations",
+        "app/Modules/Fondasi/Services/NavigationMenu.php",
+        "app/Modules/Fondasi/Enums/Permission.php",
+        "app/Modules/Fondasi/Models/IssuedDocument.php",
+        "app/Support/DocumentIssuer.php",
+        "resources/views/layouts/pdf.blade.php",
+        "resources/views/components",
+        "lang/id/idp.php",
+        "tests/Feature/Idp",
+        "tests/Unit/Idp",
+        "tests/Scope/IdpScopeTest.php",
+        "tests/Arch/ArchitectureTest.php",
+        "phpstan.neon",
+        "docs/07_DATA_MODEL.md",
+        "docs/23_ACCEPTANCE_CRITERIA.md",
+        "docs/_archive",
+        "docs/03_ROADMAP.md",
+        "docs/_MANIFEST.json",
+        "docs/user",
+        "docs/_CODING_LEDGER.json",
+        "docs/_TOKEN_LEDGER.json"
+      ],
+      "total_step": 0,
+      "step": [
+        {
+          "no": 1,
+          "nama": "Skema/migrasi",
+          "mulai": "2026-11-01T05:46:45+00:00",
+          "selesai": "2026-11-01T05:52:37+00:00",
+          "detik": 353,
+          "tok_est": 6382,
+          "muat": [
+            "docs/07_DATA_MODEL.md",
+            "docs/09_STACK.md",
+            "app/Modules/Idp/Database/Migrations",
+            "composer.json"
+          ]
+        },
+        {
+          "no": 2,
+          "nama": "Model/akses data",
+          "mulai": "2026-11-01T05:52:47+00:00",
+          "selesai": "2026-11-01T05:53:54+00:00",
+          "detik": 68,
+          "tok_est": 3237,
+          "muat": [
+            "app/Modules/Idp/Models/Idp.php",
+            "app/Modules/Idp/Models/IdpItem.php",
+            "app/Modules/Idp/Policies/IdpPolicy.php",
+            "app/Modules/Kompetensi/Models/Gap.php"
+          ]
+        },
+        {
+          "no": 3,
+          "nama": "Service/logika domain",
+          "mulai": "2026-11-01T05:54:23+00:00",
+          "selesai": "2026-11-01T05:57:41+00:00",
+          "detik": 199,
+          "tok_est": 6987,
+          "muat": [
+            "app/Support/DocumentIssuer.php",
+            "app/Modules/Idp/Actions/SubmitIdp.php",
+            "app/Modules/Idp/Actions/ApproveIdpBatch.php",
+            "app/Modules/Idp/Services/DraftBuilder.php",
+            "lang/id/idp.php",
+            "docs/26_UI_CONVENTIONS.md"
+          ]
+        },
+        {
+          "no": 4,
+          "nama": "Rute/controller",
+          "mulai": "2026-11-01T05:57:53+00:00",
+          "selesai": "2026-11-01T05:58:12+00:00",
+          "detik": 19,
+          "tok_est": 895,
+          "muat": [
+            "app/Modules/Idp/routes.php",
+            "app/Modules/Idp/Http/Controllers/LearningPlanDownloadController.php",
+            "app/Modules/Fondasi/Enums/Permission.php"
+          ]
+        },
+        {
+          "no": 5,
+          "nama": "UI + empat state",
+          "mulai": "2026-11-01T05:58:18+00:00",
+          "selesai": "2026-11-01T06:02:18+00:00",
+          "detik": 241,
+          "tok_est": 13503,
+          "muat": [
+            "app/Modules/Idp/Livewire/IdpEditor.php",
+            "app/Modules/Idp/Livewire/TeamApprovalList.php",
+            "app/Modules/Idp/Livewire/UnlinkedIdpList.php",
+            "app/Modules/Idp/resources/views/livewire/idp-editor.blade.php",
+            "app/Modules/Idp/resources/views/livewire/team-approval-list.blade.php",
+            "app/Modules/Idp/resources/views/livewire/unlinked-idp-list.blade.php",
+            "resources/views/components/input.blade.php",
+            "resources/views/components/confirm-dialog.blade.php"
+          ]
+        },
+        {
+          "no": 6,
+          "nama": "Tes",
+          "mulai": "2026-11-01T06:02:25+00:00",
+          "selesai": "2026-11-01T06:07:54+00:00",
+          "detik": 330,
+          "tok_est": 11316,
+          "muat": [
+            "tests/Feature/Idp/IdpDraftTest.php",
+            "tests/Feature/Idp/IdpSubmitTest.php",
+            "tests/Feature/Idp/IdpApprovalTest.php",
+            "tests/Feature/Idp/LearningPlanTest.php",
+            "tests/Feature/Idp/IdpCheckinCloseTest.php",
+            "tests/Scope/IdpScopeTest.php",
+            "tests/Unit/Idp/IdpItemLimitTest.php",
+            "tests/Pest.php",
+            "docs/13_TESTING.md"
+          ]
+        },
+        {
+          "no": 7,
+          "nama": "Gerbang fitur",
+          "mulai": "2026-11-01T06:08:00+00:00",
+          "selesai": "2026-11-01T06:12:43+00:00",
+          "detik": 283,
+          "tok_est": 2279,
+          "muat": [
+            "docs/23_ACCEPTANCE_CRITERIA.md",
+            "docs/_archive/23-F3.md",
+            "docs/03_ROADMAP.md",
+            "docs/user/idp.md"
+          ]
+        }
+      ],
+      "detik": 1493,
+      "tok_est": 44599,
+      "deviasi": [
+        "tests/Pest.php — helper skpWorkResults/idpWithItems di luar rencana, hanya bantuan tes",
+        "SaveIdpItem::resolveMentor — mencari mentor berdasarkan NIP tanpa visibleTo (hanya id pegawai aktif); nama mentor tampil ke pemilik IDP — tinjau terhadap docs/21",
+        "DocumentIssuer menerbitkan PDF sinkron dalam Action, bukan lewat queue documents (docs/08)",
+        "pln_idps.open_period_year kolom bangkitan untuk UNIQUE parsial; FK anak ON DELETE CASCADE, gap_id SET NULL (dicatat di docs/07)"
+      ],
+      "warn_dilewati": [
+        "S1: nama blok 23 'F3 — IDP' beda dari nama slice; ID dipetakan manual ke tes",
+        "S7: rencana memakai entri direktori, skrip mencocokkan per berkas",
+        "S8: template PDF & komponen x-progress/x-textarea bukan halaman berdata",
+        "S6: diperiksa manual"
+      ],
+      "asumsi": [
+        "Periode IDP = tahun kalender berjalan (now()->year)",
+        "Usulan RHK: irisan kata; tanpa irisan → RHK pertama",
+        "Notifikasi IDP hanya kanal database",
+        "Bukti penutupan IDP-07 dirakit di M12 (F4); F3 hanya refleksi + penilaian",
+        "Satu check-in per triwulan per IDP; triwulan dari tanggal check-in",
+        "Level kompetensi 0–5, target > awal",
+        "Produksi wajib ext-gd (QR PNG + gambar dompdf)"
+      ],
+      "dokumen_diperbarui": [
+        "docs/09_STACK.md (QR: bacon/bacon-qr-code 3.x)",
+        "docs/07_DATA_MODEL.md (catatan migrasi F3)",
+        "docs/23_ACCEPTANCE_CRITERIA.md + docs/_archive/23-F3.md",
+        "docs/03_ROADMAP.md",
+        "docs/_MANIFEST.json phases.F3",
+        "docs/user/idp.md"
+      ],
+      "landmine_tersentuh": [
+        "Container Sail tidak bisa resolve DNS — composer require dari host dengan --ignore-platform-req=ext-gd/ext-zip lalu sail artisan package:discover"
+      ],
+      "ditunda": [
+        "FON-08 delegasi persetujuan (sys_delegations belum dimigrasi)",
+        "IDP-08 templat talenta (SEBAIKNYA; butuh hr_talent_boxes F5)",
+        "Saldo JP & riwayat bangkom di draf IDP-01 (F4/M12)",
+        "Pembatalan IDP beralasan oleh pengelola",
+        "Notifikasi surel/WA & lonceng in-app (FON-07, F4)",
+        "FK pln_idp_activities.program_id → lrn_programs (F5)"
+      ],
+      "selesai": "2026-11-01T06:12:43+00:00"
     }
   ],
   "akumulasi": {
-    "detik": 1289,
-    "tok_est": 54817,
+    "detik": 2782,
+    "tok_est": 99416,
     "tok_terukur": 0,
-    "step": 7,
-    "fitur": 1
+    "step": 14,
+    "fitur": 2
   }
 }

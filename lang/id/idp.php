@@ -179,6 +179,7 @@ return [
         'intro' => 'IDP yang sudah diajukan tetapi memiliki butir kompetensi belum tertaut ke RHK SKP (IDP-10).',
         'count' => ':count butir belum tertaut',
         'status' => 'Status',
+        'error' => 'Daftar IDP gagal dimuat.',
         'empty_title' => 'Semua IDP sudah tertaut ke SKP.',
         'empty_body' => 'Tidak ada IDP dalam cakupan Anda yang memiliki butir tanpa tautan RHK.',
     ],
