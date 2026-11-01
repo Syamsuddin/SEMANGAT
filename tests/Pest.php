@@ -4,10 +4,14 @@ use App\Modules\Fondasi\Actions\AssignRole;
 use App\Modules\Fondasi\Actions\SyncUserRoles;
 use App\Modules\Fondasi\Enums\Role;
 use App\Modules\Fondasi\Models\User;
+use App\Modules\Idp\Models\Idp;
+use App\Modules\Idp\Models\IdpItem;
 use App\Modules\Integrasi\Data\SourceRowMapper;
 use App\Modules\Integrasi\Models\Employee;
 use App\Modules\Integrasi\Models\OrgUnit;
 use App\Modules\Integrasi\Models\Position;
+use App\Modules\Integrasi\Models\SkpSummary;
+use App\Modules\Integrasi\Models\SkpWorkResult;
 use App\Modules\Kompetensi\Models\JobStandard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
@@ -126,4 +130,38 @@ function skpFixture(string $name): string
     Storage::disk(config('semangat.imports.disk'))->put($ref, (string) file_get_contents(base_path('tests/Fixtures/skp_file/'.$name)));
 
     return $ref;
+}
+
+/**
+ * RHK SKP pegawai pada periode (salinan baca-saja INT-02) → id RHK sesuai urutan deskripsi.
+ *
+ * @param  list<string>  $descriptions
+ * @return list<int>
+ */
+function skpWorkResults(Employee $employee, array $descriptions, ?int $year = null): array
+{
+    $summary = SkpSummary::query()->create([
+        'employee_id' => $employee->id, 'period_year' => $year ?? (int) now()->year,
+        'source' => 'skp_file', 'external_id' => 'skp-'.Str::uuid(), 'synced_at' => now(),
+    ]);
+
+    return array_map(fn (string $d, int $i) => SkpWorkResult::query()->create([
+        'skp_summary_id' => $summary->id, 'code' => 'RHK-'.($i + 1), 'description' => $d,
+        'source' => 'skp_file', 'external_id' => 'rhk-'.Str::uuid(), 'synced_at' => now(),
+    ])->id, $descriptions, array_keys($descriptions));
+}
+
+/**
+ * IDP berstatus tertentu dengan $items butir (butir pertama tertaut RHK bila $linked).
+ */
+function idpWithItems(Employee $employee, int $items = 2, string $state = 'draft', bool $linked = true): Idp
+{
+    $factory = Idp::factory()->for($employee, 'employee');
+    $idp = ($state === 'draft' ? $factory : $factory->{$state}())->create();
+    $rhk = $linked ? skpWorkResults($employee, ['Menyusun laporan kinerja'])[0] : null;
+    for ($i = 1; $i <= $items; $i++) {
+        IdpItem::factory()->create(['idp_id' => $idp->id, 'position' => $i, 'skp_work_result_id' => $i === 1 ? $rhk : null]);
+    }
+
+    return $idp->refresh();
 }

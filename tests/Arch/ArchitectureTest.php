@@ -18,7 +18,7 @@ arch('tidak ada dd/dump/ray/var_dump')
     ->group('arch');
 
 arch('Controller & Livewire tidak memakai DB:: langsung')
-    ->expect(['App\Modules\Fondasi\Livewire', 'App\Modules\Fondasi\Http', 'App\Modules\Integrasi\Livewire', 'App\Modules\Integrasi\Http', 'App\Modules\Kompetensi\Livewire'])
+    ->expect(['App\Modules\Fondasi\Livewire', 'App\Modules\Fondasi\Http', 'App\Modules\Integrasi\Livewire', 'App\Modules\Integrasi\Http', 'App\Modules\Kompetensi\Livewire', 'App\Modules\Idp\Livewire', 'App\Modules\Idp\Http'])
     ->not->toUse('Illuminate\Support\Facades\DB')
     ->group('arch');
 
@@ -34,12 +34,12 @@ arch('Contract sumber hanya antarmuka')
     ->group('arch');
 
 arch('Service murni tidak memakai Http')
-    ->expect(['App\Modules\Integrasi\Services', 'App\Modules\Kompetensi\Services'])
+    ->expect(['App\Modules\Integrasi\Services', 'App\Modules\Kompetensi\Services', 'App\Modules\Idp\Services'])
     ->not->toUse('Illuminate\Support\Facades\Http')
     ->group('arch');
 
 arch('Data adalah DTO tanpa Eloquent')
-    ->expect(['App\Modules\Integrasi\Data', 'App\Modules\Kompetensi\Data'])
+    ->expect(['App\Modules\Integrasi\Data', 'App\Modules\Kompetensi\Data', 'App\Modules\Idp\Data'])
     ->not->toUse('Illuminate\Database\Eloquent\Model')
     ->group('arch');
 
@@ -119,3 +119,9 @@ test('INT-02 tidak ada request non-GET ke host e-Kinerja di kode aplikasi', func
 
     expect($hits)->toBe([]);
 })->group('arch');
+
+arch('PDF & QR hanya lewat App\\Support\\DocumentIssuer (docs/12, FON-09)')
+    ->expect('App')
+    ->not->toUse(['Barryvdh\\DomPDF', 'BaconQrCode'])
+    ->ignoring('App\\Support\\DocumentIssuer')
+    ->group('arch');
