@@ -25,15 +25,15 @@
     {
       "mulai": "2026-11-01T06:47:18+00:00",
       "selesai": null,
-      "step": 1,
-      "detik": 34,
-      "tok_est": 5707
+      "step": 2,
+      "detik": 98,
+      "tok_est": 10420
     }
   ],
   "step_berjalan": {
-    "no": 2,
-    "nama": "Model/akses data",
-    "mulai": "2026-11-01T06:50:15+00:00"
+    "no": 3,
+    "nama": "Service/logika domain",
+    "mulai": "2026-11-01T06:51:19+00:00"
   },
   "blueprint": {
     "sidik_awal": "618bcde2e46d608f",
@@ -505,10 +505,10 @@
     }
   ],
   "akumulasi": {
-    "detik": 2816,
-    "tok_est": 105123,
+    "detik": 2880,
+    "tok_est": 109836,
     "tok_terukur": 0,
-    "step": 15,
+    "step": 16,
     "fitur": 2
   },
   "fitur_aktif": {
@@ -604,9 +604,25 @@
           "app/Modules/JpRiwayat/Database/Migrations/2026_11_01_100000_create_out_jp_records_table.php",
           "app/Modules/JpRiwayat/Database/Migrations/2026_11_01_100100_create_out_certificates_table.php"
         ]
+      },
+      {
+        "no": 2,
+        "nama": "Model/akses data",
+        "mulai": "2026-11-01T06:50:15+00:00",
+        "selesai": "2026-11-01T06:51:19+00:00",
+        "detik": 64,
+        "tok_est": 4713,
+        "muat": [
+          "app/Modules/JpRiwayat/Models/JpRecord.php",
+          "app/Modules/JpRiwayat/Models/Certificate.php",
+          "app/Modules/JpRiwayat/Policies/JpRecordPolicy.php",
+          "app/Modules/Idp/Models/Idp.php",
+          "app/Modules/Integrasi/Models/Employee.php",
+          "app/Support/Scope/DataScope.php"
+        ]
       }
     ],
-    "detik": 34,
-    "tok_est": 5707
+    "detik": 98,
+    "tok_est": 10420
   }
 }

@@ -4,6 +4,9 @@ namespace App\Support;
 
 use App\Modules\Fondasi\Enums\DocumentType;
 use App\Modules\Fondasi\Models\IssuedDocument;
+use App\Modules\Fondasi\Models\User;
+use App\Support\Documents\DocumentContent;
+use App\Support\Documents\IssueDocumentJob;
 use BaconQrCode\Renderer\GDLibRenderer;
 use BaconQrCode\Writer;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -14,9 +17,20 @@ use Illuminate\Support\Str;
 /**
  * Satu-satunya pembuat PDF (docs/12, keputusan A5): Blade → dompdf + QR verifikasi → disk dokumen → out_issued_documents.
  * View menerima $qr (data URI PNG), $verifyUrl, $uuid di samping $data.
+ * Sejak F4 Action memanggil queue() — PDF dibuat di queue `documents` lalu pemohon dikabari (keputusan PDF 2026-11-01).
  */
 class DocumentIssuer
 {
+    /**
+     * Antrekan penerbitan setelah transaksi pemanggil di-commit.
+     *
+     * @param  class-string<DocumentContent>  $content
+     */
+    public function queue(string $content, Model $documentable, ?int $employeeId, ?User $requester = null): void
+    {
+        IssueDocumentJob::dispatch($content, $documentable, $employeeId, $requester)->afterCommit();
+    }
+
     /**
      * @param  array<string, mixed>  $data
      */
