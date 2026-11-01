@@ -145,9 +145,11 @@ code varchar(40) UNIQUE, name varchar(200), type varchar(20) (`managerial`,`soci
 | valid_until | date | NULL | KOM-07 peringatan |
 | validated_by | bigint unsigned | FK→hr_employees.id, NULL | atasan (self_assessment) |
 | validated_at | datetime | NULL | |
+| rejected_at | datetime | NULL | asesmen mandiri ditolak atasan (KOM-06; keputusan pemilik produk 2026-10-30) |
+| rejection_note | varchar(255) | NULL | alasan penolakan, terlihat pegawai |
 | report_file_path | text | NULL | 🔒 key berkas psikogram/laporan rinci |
 | notes | text | NULL | 🔒 |
-Aturan: `self_assessment` tanpa `validated_at` → tidak dipakai mesin kesenjangan. Indeks: (employee_id, competency_id, assessed_on).
+Aturan: `self_assessment` tanpa `validated_at` (menunggu) atau ber-`rejected_at` (ditolak) → tidak dipakai mesin kesenjangan; `validated_by` = atasan yang memutuskan (setuju/tolak). Indeks: (employee_id, competency_id, assessed_on).
 
 ### cmp_gaps (materialisasi, dihitung ulang oleh `RecalculateGaps`)
 employee_id FK, competency_id FK, required_level tinyint, actual_level tinyint NULL, gap tinyint, confidence enum, assessment_id FK NULL, calculated_at datetime. UNIQUE(employee_id, competency_id). Sensitivitas Tinggi (akses via scope, bukan enkripsi — dibutuhkan untuk agregasi).

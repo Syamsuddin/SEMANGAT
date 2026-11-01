@@ -14,8 +14,17 @@ class NavigationMenu
     {
         $items = [['label' => __('fondasi.nav.home'), 'route' => 'fondasi.home', 'icon' => 'home', 'active' => 'fondasi.home']];
 
+        if ($user->employee_id !== null) {
+            $items[] = ['label' => __('kompetensi.nav.profile'), 'route' => 'kompetensi.profile.show', 'icon' => 'academic-cap', 'active' => 'kompetensi.profile.*'];
+        }
+
         if ($user->hasRole(Role::Atasan->value)) {
             $items[] = ['label' => __('fondasi.nav.team'), 'route' => 'fondasi.team.index', 'icon' => 'user-group', 'active' => 'fondasi.team.*'];
+            $items[] = ['label' => __('kompetensi.nav.team'), 'route' => 'kompetensi.team.index', 'icon' => 'chart-bar-square', 'active' => 'kompetensi.team.*'];
+        }
+
+        if ($user->can(Permission::CompetencyViewAggregate->value)) {
+            $items[] = ['label' => __('kompetensi.nav.aggregate'), 'route' => 'kompetensi.aggregate.index', 'icon' => 'chart-bar', 'active' => 'kompetensi.aggregate.*'];
         }
 
         if ($user->can(Permission::EmployeeViewAny->value) && ! $user->hasRole(Role::Atasan->value)) {
@@ -24,6 +33,10 @@ class NavigationMenu
 
         if ($user->employee_id !== null) {
             $items[] = ['label' => __('fondasi.nav.profile'), 'route' => 'fondasi.profile', 'icon' => 'identification', 'active' => 'fondasi.profile'];
+        }
+
+        if ($user->can(Permission::CompetencyManage->value)) {
+            $items[] = ['label' => __('kompetensi.nav.import'), 'route' => 'kompetensi.import', 'icon' => 'arrow-up-tray', 'active' => 'kompetensi.import'];
         }
 
         if ($user->can(Permission::IntegrationView->value)) {

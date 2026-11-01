@@ -1,0 +1,295 @@
+{
+  "versi": "1.1",
+  "genesis": "2026-10-30T14:34:11+00:00",
+  "perintah": {
+    "test": "./vendor/bin/sail artisan test",
+    "run": "./vendor/bin/sail composer run dev",
+    "migrate": "./vendor/bin/sail artisan migrate",
+    "lint": "./vendor/bin/sail bin pint --test && ./vendor/bin/sail bin phpstan analyse"
+  },
+  "sesi": [
+    {
+      "mulai": "2026-10-30T14:34:11+00:00",
+      "selesai": null,
+      "step": 7,
+      "detik": 1289,
+      "tok_est": 54817
+    }
+  ],
+  "step_berjalan": null,
+  "blueprint": {
+    "sidik_awal": "618bcde2e46d608f",
+    "sidik": "618bcde2e46d608f",
+    "dokumen": 27,
+    "disegel": "2026-10-30T14:34:11+00:00"
+  },
+  "riwayat_fitur": [
+    {
+      "fitur": "F2 Profil & kesenjangan",
+      "rute": "Fitur baru (vertical slice)",
+      "mulai": "2026-10-30T14:56:25+00:00",
+      "rencana": [
+        "app/Modules/Kompetensi/KompetensiServiceProvider.php",
+        "app/Modules/Kompetensi/routes.php",
+        "app/Modules/Kompetensi/Database/Migrations/2026_10_30_100000_create_cmp_competencies_table.php",
+        "app/Modules/Kompetensi/Database/Migrations/2026_10_30_100100_create_cmp_job_standards_table.php",
+        "app/Modules/Kompetensi/Database/Migrations/2026_10_30_100200_create_cmp_job_standard_items_table.php",
+        "app/Modules/Kompetensi/Database/Migrations/2026_10_30_100300_add_job_standard_foreign_to_hr_positions_table.php",
+        "app/Modules/Kompetensi/Database/Migrations/2026_10_30_100400_create_cmp_assessments_table.php",
+        "app/Modules/Kompetensi/Database/Migrations/2026_10_30_100500_create_cmp_gaps_table.php",
+        "app/Modules/Integrasi/Database/Migrations/2026_10_30_090000_create_hr_skp_summaries_table.php",
+        "app/Modules/Integrasi/Database/Migrations/2026_10_30_090100_create_hr_skp_work_results_table.php",
+        "app/Modules/Kompetensi/Enums/CompetencyType.php",
+        "app/Modules/Kompetensi/Enums/AssessmentMethod.php",
+        "app/Modules/Kompetensi/Models/Competency.php",
+        "app/Modules/Kompetensi/Models/JobStandard.php",
+        "app/Modules/Kompetensi/Models/JobStandardItem.php",
+        "app/Modules/Kompetensi/Models/Assessment.php",
+        "app/Modules/Kompetensi/Models/Gap.php",
+        "app/Modules/Kompetensi/Database/Factories/CompetencyFactory.php",
+        "app/Modules/Kompetensi/Database/Factories/JobStandardFactory.php",
+        "app/Modules/Kompetensi/Database/Factories/JobStandardItemFactory.php",
+        "app/Modules/Kompetensi/Database/Factories/AssessmentFactory.php",
+        "app/Modules/Kompetensi/Database/Factories/GapFactory.php",
+        "app/Modules/Kompetensi/Services/GapCalculator.php",
+        "app/Modules/Kompetensi/Services/GapAggregator.php",
+        "app/Modules/Kompetensi/Services/CompetencyFileReader.php",
+        "app/Modules/Kompetensi/Services/SensitiveFileStore.php",
+        "app/Modules/Kompetensi/Data/GapLine.php",
+        "app/Modules/Kompetensi/Data/ImportReport.php",
+        "app/Modules/Kompetensi/Actions/RecalculateGaps.php",
+        "app/Modules/Kompetensi/Actions/RecordSelfAssessment.php",
+        "app/Modules/Kompetensi/Actions/ValidateSelfAssessment.php",
+        "app/Modules/Kompetensi/Actions/ImportCompetencyFile.php",
+        "app/Modules/Kompetensi/Actions/AttachAssessmentReport.php",
+        "app/Modules/Kompetensi/Actions/OpenAssessmentReport.php",
+        "app/Modules/Kompetensi/Events/AssessmentRecorded.php",
+        "app/Modules/Kompetensi/Listeners/RecalculateGapsOnAssessment.php",
+        "app/Modules/Kompetensi/Policies/AssessmentPolicy.php",
+        "app/Modules/Kompetensi/Console/RecalculateGapsCommand.php",
+        "app/Modules/Kompetensi/Livewire/CompetencyProfile.php",
+        "app/Modules/Kompetensi/Livewire/TeamGapSummary.php",
+        "app/Modules/Kompetensi/Livewire/SelfAssessmentForm.php",
+        "app/Modules/Kompetensi/Livewire/SelfAssessmentValidation.php",
+        "app/Modules/Kompetensi/Livewire/AssessmentDetail.php",
+        "app/Modules/Kompetensi/Livewire/GapAggregate.php",
+        "app/Modules/Kompetensi/Livewire/CompetencyImport.php",
+        "app/Modules/Kompetensi/resources/views/livewire/competency-profile.blade.php",
+        "app/Modules/Kompetensi/resources/views/livewire/team-gap-summary.blade.php",
+        "app/Modules/Kompetensi/resources/views/livewire/self-assessment-form.blade.php",
+        "app/Modules/Kompetensi/resources/views/livewire/self-assessment-validation.blade.php",
+        "app/Modules/Kompetensi/resources/views/livewire/assessment-detail.blade.php",
+        "app/Modules/Kompetensi/resources/views/livewire/gap-aggregate.blade.php",
+        "app/Modules/Kompetensi/resources/views/livewire/competency-import.blade.php",
+        "app/Modules/Integrasi/Contracts/SkpSource.php",
+        "app/Modules/Integrasi/Adapters/SkpFileImportAdapter.php",
+        "app/Modules/Integrasi/Data/SkpRecord.php",
+        "app/Modules/Integrasi/Data/SkpWorkResultRecord.php",
+        "app/Modules/Integrasi/Models/SkpSummary.php",
+        "app/Modules/Integrasi/Models/SkpWorkResult.php",
+        "app/Modules/Integrasi/Actions/RunSkpImport.php",
+        "app/Modules/Integrasi/Console/ImportCommand.php",
+        "app/Modules/Integrasi/IntegrasiServiceProvider.php",
+        "app/Support/Enums/Confidence.php",
+        "app/Modules/Fondasi/Enums/Permission.php",
+        "app/Modules/Fondasi/Services/NavigationMenu.php",
+        "bootstrap/providers.php",
+        "config/semangat.php",
+        "config/filesystems.php",
+        "lang/id/kompetensi.php",
+        "lang/id/integrasi.php",
+        "resources/views/components/confidence.blade.php",
+        "resources/views/components/select.blade.php",
+        "docs/07_DATA_MODEL.md",
+        "docs/11_COMMANDS.md",
+        "docs/23_ACCEPTANCE_CRITERIA.md",
+        "docs/_archive/23-F2.md",
+        "docs/03_ROADMAP.md",
+        "docs/_MANIFEST.json",
+        "tests/Unit/Kompetensi/GapCalculatorTest.php",
+        "tests/Feature/Kompetensi/CompetencyProfileTest.php",
+        "tests/Feature/Kompetensi/SelfAssessmentTest.php",
+        "tests/Feature/Kompetensi/AssessmentDetailTest.php",
+        "tests/Feature/Kompetensi/CompetencyImportTest.php",
+        "tests/Feature/Kompetensi/GapAggregateTest.php",
+        "tests/Feature/Integrasi/SkpImportTest.php",
+        "tests/Contract/SkpFileImportAdapterTest.php",
+        "tests/Scope/CompetencyScopeTest.php",
+        "tests/Arch/ArchitectureTest.php",
+        "tests/Pest.php"
+      ],
+      "total_step": 0,
+      "step": [
+        {
+          "no": 1,
+          "nama": "Skema/migrasi",
+          "mulai": "2026-10-30T14:56:31+00:00",
+          "selesai": "2026-10-30T14:57:24+00:00",
+          "detik": 54,
+          "tok_est": 5284,
+          "muat": [
+            "docs/07_DATA_MODEL.md",
+            "docs/22_CHANGE_POLICY.md",
+            "app/Modules/Kompetensi/Database/Migrations"
+          ]
+        },
+        {
+          "no": 2,
+          "nama": "Model/akses data",
+          "mulai": "2026-10-30T14:57:36+00:00",
+          "selesai": "2026-10-30T14:59:08+00:00",
+          "detik": 93,
+          "tok_est": 8271,
+          "muat": [
+            "docs/07_DATA_MODEL.md",
+            "docs/12_PROJECT_STRUCTURE.md",
+            "app/Modules/Kompetensi/Models/Assessment.php",
+            "app/Modules/Kompetensi/Models/JobStandard.php",
+            "app/Modules/Kompetensi/Models/Gap.php"
+          ]
+        },
+        {
+          "no": 3,
+          "nama": "Service/logika domain",
+          "mulai": "2026-10-30T14:59:58+00:00",
+          "selesai": "2026-10-30T15:06:12+00:00",
+          "detik": 375,
+          "tok_est": 17082,
+          "muat": [
+            "docs/06_BUSINESS_PROCESS.md",
+            "docs/05_USER_ROLE.md",
+            "docs/21_SECURITY_RULES.md",
+            "docs/08_ARCHITECTURE.md",
+            "app/Modules/Kompetensi/Services/GapCalculator.php",
+            "app/Modules/Kompetensi/Actions/ImportCompetencyFile.php",
+            "app/Modules/Kompetensi/Actions/OpenAssessmentReport.php",
+            "app/Modules/Kompetensi/Services/GapAggregator.php",
+            "app/Modules/Integrasi/Actions/RunSkpImport.php",
+            "app/Modules/Integrasi/Adapters/SkpFileImportAdapter.php",
+            "lang/id/kompetensi.php"
+          ]
+        },
+        {
+          "no": 4,
+          "nama": "Endpoint/rute",
+          "mulai": "2026-10-30T15:06:21+00:00",
+          "selesai": "2026-10-30T15:08:23+00:00",
+          "detik": 123,
+          "tok_est": 4753,
+          "muat": [
+            "app/Modules/Kompetensi/routes.php",
+            "app/Modules/Kompetensi/Livewire/CompetencyProfile.php",
+            "app/Modules/Kompetensi/Livewire/AssessmentDetail.php",
+            "app/Modules/Kompetensi/Livewire/SelfAssessmentValidation.php",
+            "app/Modules/Kompetensi/Livewire/CompetencyImport.php",
+            "app/Modules/Kompetensi/Livewire/TeamGapSummary.php",
+            "app/Modules/Integrasi/Livewire/HealthPanel.php"
+          ]
+        },
+        {
+          "no": 5,
+          "nama": "UI + empat state",
+          "mulai": "2026-10-30T15:08:34+00:00",
+          "selesai": "2026-10-30T15:11:00+00:00",
+          "detik": 146,
+          "tok_est": 7112,
+          "muat": [
+            "docs/26_UI_CONVENTIONS.md",
+            "resources/views/components/confidence.blade.php",
+            "app/Modules/Kompetensi/resources/views/livewire/competency-profile.blade.php",
+            "app/Modules/Kompetensi/resources/views/livewire/gap-aggregate.blade.php",
+            "app/Modules/Kompetensi/resources/views/livewire/assessment-detail.blade.php",
+            "app/Modules/Kompetensi/resources/views/livewire/self-assessment-validation.blade.php"
+          ]
+        },
+        {
+          "no": 6,
+          "nama": "Tes",
+          "mulai": "2026-10-30T15:11:14+00:00",
+          "selesai": "2026-10-30T15:16:32+00:00",
+          "detik": 319,
+          "tok_est": 9375,
+          "muat": [
+            "docs/13_TESTING.md",
+            "tests/Pest.php",
+            "tests/Arch/ArchitectureTest.php",
+            "tests/Scope/EmployeeScopeTest.php",
+            "tests/Contract/EmployeeFileImportAdapterTest.php",
+            "tests/Feature/Fondasi/AuditTrailTest.php",
+            "tests/Scope/CompetencyScopeTest.php",
+            "tests/Feature/Kompetensi/AssessmentDetailTest.php"
+          ]
+        },
+        {
+          "no": 7,
+          "nama": "Gerbang fitur",
+          "mulai": "2026-10-30T15:16:43+00:00",
+          "selesai": "2026-10-30T15:19:42+00:00",
+          "detik": 179,
+          "tok_est": 2940,
+          "muat": [
+            "docs/23_ACCEPTANCE_CRITERIA.md",
+            "docs/24_DEFINITION_OF_DONE.md",
+            "docs/03_ROADMAP.md",
+            "docs/11_COMMANDS.md",
+            "docs/user/kompetensi.md"
+          ]
+        }
+      ],
+      "detik": 1289,
+      "tok_est": 54817,
+      "deviasi": [
+        "app/Modules/Integrasi/Services/AdapterRegistry.php — di luar rencana: tambah skpSource() agar adaptor SKP diganti lewat config seperti adaptor pegawai",
+        "app/Modules/Kompetensi/Jobs/RecalculateGapsJob.php — di luar rencana: hitung ulang massal ber-queue setelah impor SKJ dan sinkron pegawai (docs/06 §2 langkah 4)",
+        "tests/Fixtures/skp_file/valid.csv — fixture kontrak adaptor SKP (docs/13)",
+        "docs/user/integrasi.md — tambah 1 butir panduan impor SKP",
+        "cmp_assessments.rejected_at/rejection_note — kolom aditif atas keputusan pemilik produk 2026-10-30"
+      ],
+      "warn_dilewati": [
+        "S1: nama fitur ledger beda dengan judul blok 23 ('F2 — Profil & kesenjangan'); kriteria diverifikasi manual lewat blok verifikasi",
+        "S6: konvensi 12/20/21 ditinjau manual — modul app/Modules/Kompetensi, logika di Actions/Services, query lewat visibleTo, kolom 🔒 encrypted + audit baca",
+        "S8: halaman baca-saja (profil, ringkasan tim, agregat) tanpa aksi klien sehingga tanpa state memuat/gagal sendiri, galat server ditangani halaman galat global seperti F1; x-confidence/x-select adalah komponen, bukan halaman berdata",
+        "DoD 360 px: belum diverifikasi visual (tidak ada browser headless di Codespace); tata letak mobile-first dengan kartu bertumpuk, target sentuh min-h-11"
+      ],
+      "asumsi": [
+        "SKJ pegawai: hr_positions.job_standard_id bila diisi sumber, selain itu cmp_job_standards.position_code = hr_positions.code dengan effective_on terbaru ≤ hari ini; M03 tidak menulis tabel ⇅ M02",
+        "Profil menghitung gap langsung (GapCalculator) agar butir yang terpenuhi ikut tampil; cmp_gaps dipakai ringkasan tim & agregat",
+        "Impor kompetensi berjalan sinkron (berkas kecil); hitung ulang gap tetap di queue",
+        "Audit baca 🔒: dicatat pada pembukaan/unduhan laporan rinci (OpenAssessmentReport); daftar & mesin kesenjangan memilih kolom non-🔒 saja",
+        "Disk sensitive = lokal privat + enkripsi aplikasi (MinIO belum ada di compose, lihat open_questions)",
+        "Agregat clo/dewan: sel n<5 disamarkan (config semangat.aggregate_min_n)",
+        "Pemilik melihat laporan rinci sendiri tanpa alasan, tetap tercatat read_sensitive (reason NULL)"
+      ],
+      "dokumen_diperbarui": [
+        "docs/07_DATA_MODEL.md (cmp_assessments.rejected_at, rejection_note)",
+        "docs/11_COMMANDS.md (semangat:import kamus",
+        "skj",
+        "hasil-uji)",
+        "docs/23_ACCEPTANCE_CRITERIA.md + docs/_archive/23-F2.md",
+        "docs/03_ROADMAP.md",
+        "docs/_MANIFEST.json phases.F2",
+        "docs/user/kompetensi.md",
+        "docs/user/integrasi.md"
+      ],
+      "landmine_tersentuh": [
+        "Izin baru competency.manage & competency.view_aggregate: jalankan ulang RolePermissionSeeder (idempoten) saat rilis",
+        "Komentar PHP berisi 'K*/B*' menutup docblock — tulis 'K*, B*'"
+      ],
+      "ditunda": [
+        "Halaman unggah SKP untuk pengelola (sementara hanya CLI semangat:import skp)",
+        "KOM-07 peringatan masa berlaku hasil uji (bukan cakupan F2 di roadmap)",
+        "Delegasi validasi asesmen mandiri (FON-08, sys_delegations belum ada)",
+        "Notifikasi ke atasan saat asesmen mandiri diajukan (FON-07 di F4)",
+        "Bucket MinIO semangat-sensitive + flysystem-s3 untuk produksi"
+      ],
+      "selesai": "2026-10-30T15:19:42+00:00"
+    }
+  ],
+  "akumulasi": {
+    "detik": 1289,
+    "tok_est": 54817,
+    "tok_terukur": 0,
+    "step": 7,
+    "fitur": 1
+  }
+}
