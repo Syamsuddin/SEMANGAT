@@ -2,6 +2,7 @@
 
 namespace App\Modules\Fondasi\Livewire;
 
+use App\Modules\Fondasi\Actions\ReadNotifications;
 use App\Modules\Fondasi\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Notifications\DatabaseNotification;
@@ -12,38 +13,61 @@ use Livewire\Component;
 
 /**
  * FON-07 (dasar, in-app saja — keputusan 2026-11-01): pusat notifikasi pengguna; hanya notifikasi miliknya sendiri.
+ * Dimuat per 50; "Tandai semua dibaca" mengikuti jumlah belum dibaca seluruhnya, bukan hanya yang termuat.
  *
  * @property-read Collection<int, DatabaseNotification> $notifications
+ * @property-read int $unreadCount
+ * @property-read bool $hasMore
  */
 #[Layout('layouts.app')]
 class NotificationCenter extends Component
 {
+    public const PER_PAGE = 50;
+
+    public int $limit = self::PER_PAGE;
+
     /** @return Collection<int, DatabaseNotification> */
     #[Computed]
     public function notifications(): Collection
     {
-        return $this->user()->notifications()->limit(50)->get();
+        return $this->user()->notifications()->limit($this->limit)->get();
     }
 
-    public function open(string $id): mixed
+    #[Computed]
+    public function unreadCount(): int
     {
-        $notification = $this->user()->notifications()->findOrFail($id);
-        $notification->markAsRead();
-        $url = $notification->data['url'] ?? null;
+        return $this->user()->unreadNotifications()->count();
+    }
 
-        if (is_string($url) && str_starts_with($url, (string) config('app.url'))) {
+    #[Computed]
+    public function hasMore(): bool
+    {
+        return $this->user()->notifications()->count() > $this->limit;
+    }
+
+    public function loadMore(): void
+    {
+        $this->limit += self::PER_PAGE;
+        unset($this->notifications, $this->hasMore);
+    }
+
+    public function open(string $id, ReadNotifications $read): mixed
+    {
+        $url = $read->open($this->user(), $id);
+
+        if ($url !== null) {
             return $this->redirect($url);
         }
 
-        unset($this->notifications);
+        unset($this->notifications, $this->unreadCount);
 
         return null;
     }
 
-    public function markAllRead(): void
+    public function markAllRead(ReadNotifications $read): void
     {
-        $this->user()->unreadNotifications()->update(['read_at' => now()]);
-        unset($this->notifications);
+        $read->markAll($this->user());
+        unset($this->notifications, $this->unreadCount);
         $this->dispatch('toast', type: 'success', message: __('fondasi.notifications.all_read'));
     }
 

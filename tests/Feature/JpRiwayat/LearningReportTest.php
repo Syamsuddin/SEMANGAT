@@ -9,7 +9,11 @@ use App\Modules\Idp\Livewire\IdpEditor;
 use App\Modules\Idp\Models\IdpActivity;
 use App\Modules\Integrasi\Models\Employee;
 use App\Modules\JpRiwayat\Actions\IssueLearningReport;
+use App\Modules\JpRiwayat\Documents\LearningReportContent;
+use App\Modules\JpRiwayat\Livewire\JpOverview;
 use App\Modules\JpRiwayat\Models\JpRecord;
+use App\Modules\Kompetensi\Models\Gap;
+use App\Support\Enums\Confidence;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
@@ -104,4 +108,55 @@ it('JPR-05 unduh Laporan: 404 sebelum terbit, PDF setelah terbit; atasan dalam c
     $this->actingAs($this->user)->get(route('jp.reports.download', $this->idp))->assertOk()->assertHeader('Content-Type', 'application/pdf');
     $this->actingAs(employeeUser($this->supervisor))->get(route('jp.reports.download', $this->idp))->assertOk();
     $this->actingAs(employeeUser())->get(route('jp.reports.download', $this->idp))->assertForbidden();
+})->group('jp');
+
+it('JPR-05 notifikasi Laporan menuju halaman JP tahun periode IDP, yang memuat tombol unduh', function () {
+    Notification::fake();
+    app(IssueLearningReport::class)->handle($this->user, $this->idp);
+
+    $url = route('jp.records.mine', ['tahun' => $this->idp->period_year]);
+    Notification::assertSentTo($this->user, DocumentReady::class, fn (DocumentReady $n) => $n->url === $url);
+
+    $this->actingAs($this->user)->get($url)->assertOk()
+        ->assertSee('Unduh Laporan Hasil Pembelajaran')
+        ->assertSee(route('jp.reports.download', $this->idp), false);
+})->group('jp');
+
+it('JPR-05 Laporan untuk IDP tahun lalu tetap dapat diterbitkan & diunduh dari halaman JP setelah pergantian tahun', function () {
+    $lastYear = (int) now()->year - 1;
+    $this->idp->update(['period_year' => $lastYear]);
+
+    $page = Livewire::withQueryParams(['tahun' => $lastYear])->actingAs($this->user)->test(JpOverview::class)
+        ->assertSet('year', $lastYear)
+        ->assertSee('IDP '.$lastYear.' sudah ditutup.')
+        ->assertSee('Terbitkan Laporan Hasil Pembelajaran')
+        ->call('issueReport')
+        ->assertHasNoErrors()
+        ->assertDispatched('toast');
+
+    expect($this->idp->refresh()->learningReport)->not->toBeNull();
+    $page->assertSee('Unduh Laporan Hasil Pembelajaran');
+
+    // Atasan dalam cakupan melihat & mengunduh, tetapi tidak menerbitkan atas nama pegawai.
+    Livewire::withQueryParams(['tahun' => $lastYear])->actingAs(employeeUser($this->supervisor))->test(JpOverview::class, ['employee' => $this->employee])
+        ->assertSee('Unduh Laporan Hasil Pembelajaran')
+        ->assertDontSee('Terbitkan Laporan Hasil Pembelajaran');
+})->group('jp');
+
+it('JPR-05 pegawai lain dalam cakupan tidak dapat menerbitkan Laporan dari halaman JP pegawai', function () {
+    Livewire::actingAs(employeeUser($this->supervisor))->test(JpOverview::class, ['employee' => $this->employee])
+        ->assertSee('Laporan Hasil Pembelajaran belum diterbitkan pegawai.')
+        ->call('issueReport')
+        ->assertForbidden();
+    expect($this->idp->refresh()->learningReport)->toBeNull();
+})->group('jp');
+
+it('JPR-05 Laporan menandai keyakinan level awal (docs/20: data indikatif tidak bergaya terverifikasi)', function () {
+    $gap = Gap::factory()->create(['employee_id' => $this->employee->id, 'competency_id' => $this->idp->items[0]->competency_id, 'confidence' => Confidence::Provisional]);
+    $this->idp->items[0]->update(['gap_id' => $gap->id]);
+
+    $html = view('jp::pdf.learning-report', app(LearningReportContent::class)->data($this->idp->refresh()) + ['uuid' => 'x', 'verifyUrl' => 'https://contoh/verifikasi/x', 'qr' => ''])->render();
+
+    expect($html)->toContain('Keyakinan level awal: Sementara')
+        ->toContain('Level awal diisi pegawai, belum ada data asesmen');
 })->group('jp');

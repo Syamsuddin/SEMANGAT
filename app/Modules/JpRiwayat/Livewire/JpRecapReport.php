@@ -16,9 +16,14 @@ class JpRecapReport extends Component
 {
     public int $year;
 
-    public function mount(): void
+    /** Dicek di setiap permintaan Livewire (bukan hanya muat awal) — izin yang dicabut berlaku pada pembaruan berikutnya. */
+    public function boot(): void
     {
         $this->authorize(Permission::JpViewRecap->value);
+    }
+
+    public function mount(): void
+    {
         $this->year = (int) now()->year;
     }
 

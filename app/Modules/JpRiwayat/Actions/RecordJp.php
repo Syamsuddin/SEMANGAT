@@ -13,7 +13,8 @@ use InvalidArgumentException;
 /**
  * JPR-03: titik masuk pencatatan otomatis dari M08 (pembelajaran tempat kerja disetujui), M09 (kelas selesai),
  * M10 (sesi coaching) → CatatanJP `verified` tanpa verifikasi manual (docs/06 § 6.1).
- * Idempoten per sumber: memanggil ulang untuk sumber yang sama mengembalikan catatan yang ada.
+ * Idempoten per sumber: memanggil ulang untuk sumber yang sama mengembalikan catatan yang ada — juga saat serentak,
+ * karena UNIQUE(sourceable_type, sourceable_id) + createOrFirst.
  */
 class RecordJp
 {
@@ -23,7 +24,7 @@ class RecordJp
             throw new InvalidArgumentException('JP harus > 0 dan tanggal selesai tidak sebelum tanggal mulai.');
         }
 
-        return JpRecord::query()->firstOrCreate(
+        return JpRecord::query()->createOrFirst(
             ['sourceable_type' => $source->getMorphClass(), 'sourceable_id' => $source->getKey()],
             [
                 'employee_id' => $employeeId,

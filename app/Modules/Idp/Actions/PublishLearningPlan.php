@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Gate;
 /**
  * IDP-05: terbitkan Rencana Pembelajaran dari IDP `approved` → `active`. PDF ber-QR dibuat di queue `documents`
  * (keputusan PDF 2026-11-01) dan tercatat di out_issued_documents; pegawai dikabari saat siap (FON-07).
+ * Bila job gagal, pemilik mengantrekan ulang lewat retry() — job idempoten, jadi klik ganda tidak menerbitkan dua PDF.
  */
 class PublishLearningPlan
 {
@@ -34,5 +35,12 @@ class PublishLearningPlan
 
             return $idp;
         });
+    }
+
+    public function retry(User $user, Idp $idp): void
+    {
+        Gate::forUser($user)->authorize('reissuePlan', $idp);
+
+        $this->issuer->queue(LearningPlanContent::class, $idp, $idp->employee_id, $user);
     }
 }

@@ -29,7 +29,8 @@ class CertificateVerificationList extends Component
     /** @var array<int|string, string> record_id => alasan penolakan */
     public array $reasons = [];
 
-    public function mount(): void
+    /** Dicek di setiap permintaan Livewire (bukan hanya muat awal), termasuk pencarian & aksi. */
+    public function boot(): void
     {
         abort_unless($this->user()->can(Permission::JpVerify->value), 403);
     }

@@ -37,6 +37,12 @@ class IdpPolicy
         return $this->isOwner($user, $idp) && $idp->status === IdpStatus::Approved;
     }
 
+    /** Ulang penerbitan Rencana Pembelajaran yang gagal: IDP sudah `active` tetapi PDF-nya belum terbit (docs/14). */
+    public function reissuePlan(User $user, Idp $idp): bool
+    {
+        return $this->isOwner($user, $idp) && $idp->status === IdpStatus::Active && ! $idp->learningPlan()->exists();
+    }
+
     public function checkin(User $user, Idp $idp): bool
     {
         return $this->isOwner($user, $idp) && $idp->status === IdpStatus::Active;

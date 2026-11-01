@@ -29,6 +29,26 @@
         @endif
     </x-card>
 
+    {{-- Laporan Hasil Pembelajaran IDP tahun terpilih (JPR-05) --}}
+    @if ($this->closedIdp)
+        <x-card class="space-y-2" wire:loading.remove wire:target="year">
+            <h2 class="text-base font-semibold text-navy">{{ __('jp.report.title') }}</h2>
+            <p class="text-sm text-muted">{{ __('jp.report.for_year', ['year' => $this->closedIdp->period_year]) }} @if ($this->isOwner){{ __('jp.report.hint') }}@endif</p>
+            @if ($this->closedIdp->learningReport)
+                <x-button variant="secondary" :href="route('jp.reports.download', $this->closedIdp)">
+                    <x-heroicon-o-arrow-down-tray class="size-4" aria-hidden="true" />{{ __('jp.report.download') }}
+                </x-button>
+            @elseif ($this->isOwner)
+                @error('report') <x-error-state :message="$message" /> @enderror
+                <x-confirm-dialog :title="__('jp.report.issue_title')" :message="__('jp.report.issue_body')" :confirm="__('jp.report.issue')" action="issueReport">
+                    <x-slot:trigger><x-button class="w-full sm:w-auto">{{ __('jp.report.issue') }}</x-button></x-slot:trigger>
+                </x-confirm-dialog>
+            @else
+                <p class="text-sm text-muted">{{ __('jp.report.not_issued') }}</p>
+            @endif
+        </x-card>
+    @endif
+
     {{-- Unggah sertifikat luar (JPR-02) --}}
     @if ($this->isOwner)
         <x-card class="space-y-3">
@@ -42,7 +62,7 @@
                 <x-select :label="__('jp.attributes.mode')" name="form.mode" wire:model="form.mode" :options="$this->modeOptions()" />
                 <x-input :label="__('jp.attributes.activity_start')" name="form.activity_start" type="date" wire:model="form.activity_start" required />
                 <x-input :label="__('jp.attributes.activity_end')" name="form.activity_end" type="date" wire:model="form.activity_end" required />
-                <x-input :label="__('jp.attributes.jp')" name="form.jp" type="number" step="0.5" min="0.5" max="999.9" wire:model="form.jp" :hint="__('jp.upload.jp_hint')" required />
+                <x-input :label="__('jp.attributes.jp')" name="form.jp" type="number" step="0.1" min="0.1" max="999.9" wire:model="form.jp" :hint="__('jp.upload.jp_hint')" required />
                 <div>
                     <x-file-upload :label="__('jp.attributes.file')" name="file" wire:model="file" accept=".pdf,.jpg,.jpeg,.png" :hint="__('jp.upload.file_hint')" />
                     <div wire:loading wire:target="file" class="text-xs text-muted">{{ __('ui.uploading') }}</div>

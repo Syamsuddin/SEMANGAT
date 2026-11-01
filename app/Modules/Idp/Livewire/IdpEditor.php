@@ -161,6 +161,12 @@ class IdpEditor extends Component
         $this->dispatch('toast', type: 'success', message: __('idp.editor.published'));
     }
 
+    public function retryPlan(PublishLearningPlan $publish): void
+    {
+        $publish->retry($this->user(), $this->current());
+        $this->dispatch('toast', type: 'success', message: __('idp.editor.published'));
+    }
+
     public function saveCheckin(RecordCheckin $record): void
     {
         $record->handle($this->user(), $this->current(), $this->checkinNote, $this->progress);

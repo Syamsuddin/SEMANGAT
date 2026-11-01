@@ -26,7 +26,7 @@ class LearningPlanContent implements DocumentContent
     /** @param  Idp  $documentable */
     public function data(Model $documentable): array
     {
-        $documentable->load(['employee.position', 'employee.opd', 'supervisor', 'items.competency', 'items.workResult', 'items.mentor', 'items.activities']);
+        $documentable->load(['employee.position', 'employee.opd', 'supervisor', 'items.competency', 'items.gap', 'items.workResult', 'items.mentor', 'items.activities']);
 
         return [
             'idp' => $documentable,

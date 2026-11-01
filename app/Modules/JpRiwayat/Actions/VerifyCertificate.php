@@ -29,10 +29,14 @@ class VerifyCertificate
             'jp' => ['required', 'numeric', 'gt:0', 'max:999.9', 'decimal:0,1'],
         ], [], __('jp.attributes'))->validate();
 
-        $before = (string) $record->jp;
-        DB::transaction(function () use ($user, $record, $data, $before) {
-            $record->forceFill(['status' => JpStatus::Verified, 'jp' => $data['jp'], 'verified_by' => $user->id, 'verified_at' => now(), 'reject_reason' => null])->save();
-            $this->audit->log(AuditAction::Update, $record, changes: ['status' => JpStatus::Verified->value, 'jp' => ['from' => $before, 'to' => (string) $record->jp]], userId: $user->id);
+        $record = DB::transaction(function () use ($user, $record, $data) {
+            // Muat ulang di bawah kunci: verifikator serentak tidak saling menimpa; status `pending` dicek ulang.
+            $locked = $this->lock($user, $record);
+            $before = (string) $locked->jp;
+            $locked->forceFill(['status' => JpStatus::Verified, 'jp' => $data['jp'], 'verified_by' => $user->id, 'verified_at' => now(), 'reject_reason' => null])->save();
+            $this->audit->log(AuditAction::Update, $locked, changes: ['status' => JpStatus::Verified->value, 'jp' => ['from' => $before, 'to' => (string) $locked->jp]], userId: $user->id);
+
+            return $locked;
         });
 
         $record->employee->user?->notify(new CertificateVerified($record));
@@ -48,13 +52,24 @@ class VerifyCertificate
             'reject_reason' => ['required', 'string', 'min:5', 'max:1000'],
         ], [], __('jp.attributes'))->validate();
 
-        DB::transaction(function () use ($user, $record, $data) {
-            $record->forceFill(['status' => JpStatus::Rejected, 'verified_by' => $user->id, 'verified_at' => now(), 'reject_reason' => $data['reject_reason']])->save();
-            $this->audit->log(AuditAction::Update, $record, changes: ['status' => JpStatus::Rejected->value], userId: $user->id);
+        $record = DB::transaction(function () use ($user, $record, $data) {
+            $locked = $this->lock($user, $record);
+            $locked->forceFill(['status' => JpStatus::Rejected, 'verified_by' => $user->id, 'verified_at' => now(), 'reject_reason' => $data['reject_reason']])->save();
+            $this->audit->log(AuditAction::Update, $locked, changes: ['status' => JpStatus::Rejected->value], userId: $user->id);
+
+            return $locked;
         });
 
         $record->employee->user?->notify(new CertificateRejected($record));
 
         return $record;
+    }
+
+    private function lock(User $user, JpRecord $record): JpRecord
+    {
+        $locked = JpRecord::query()->lockForUpdate()->findOrFail($record->id);
+        Gate::forUser($user)->authorize('verify', $locked);
+
+        return $locked;
     }
 }

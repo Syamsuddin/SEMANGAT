@@ -5,6 +5,7 @@ namespace App\Modules\JpRiwayat\Actions;
 use App\Modules\Fondasi\Enums\AuditAction;
 use App\Modules\Fondasi\Models\User;
 use App\Modules\Idp\Enums\ActivityPortion;
+use App\Modules\Integrasi\Models\Employee;
 use App\Modules\JpRiwayat\Enums\JpMode;
 use App\Modules\JpRiwayat\Enums\JpStatus;
 use App\Modules\JpRiwayat\Models\Certificate;
@@ -12,6 +13,7 @@ use App\Modules\JpRiwayat\Models\JpRecord;
 use App\Modules\JpRiwayat\Services\CertificateStore;
 use App\Support\AuditLogger;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +25,12 @@ use Illuminate\Validation\ValidationException;
  * JPR-02: pegawai mengunggah sertifikat bangkom luar → CatatanJP `pending` menunggu verifikator.
  * JP diisi pegawai sesuai sertifikat lalu dikonfirmasi/dikoreksi verifikator (keputusan 2026-11-01; konversi KAT-06 di F5).
  * Duplikat ditolak saat unggah: hash berkas sama, atau judul+tanggal mulai+penyelenggara sama (docs/06 § 6).
+ * Cek duplikat diulang di bawah kunci baris pegawai agar dua unggahan serentak tidak sama-sama lolos.
  */
 class UploadCertificate
 {
-    private const ALLOWED_MIME = ['application/pdf', 'image/jpeg', 'image/png'];
+    /** MIME hasil deteksi isi → ekstensi berkas simpanan; nama berkas dari klien tidak dipakai. */
+    private const EXTENSIONS = ['application/pdf' => 'pdf', 'image/jpeg' => 'jpg', 'image/png' => 'png'];
 
     public function __construct(private readonly CertificateStore $files, private readonly AuditLogger $audit) {}
 
@@ -38,7 +42,8 @@ class UploadCertificate
         }
         $employeeId = (int) $user->employee_id;
 
-        $data = Validator::make($input + ['file' => $file], [
+        // Berkas argumen yang divalidasi & disimpan — kunci `file` dari isian tidak boleh menggantikannya.
+        $data = Validator::make(['file' => $file] + $input, [
             'title' => ['required', 'string', 'max:255'],
             'issuer' => ['required', 'string', 'max:200'],
             'number' => ['nullable', 'string', 'max:100'],
@@ -47,24 +52,28 @@ class UploadCertificate
             'jp' => ['required', 'numeric', 'gt:0', 'max:999.9', 'decimal:0,1'],
             'activity_start' => ['required', 'date', 'before_or_equal:today'],
             'activity_end' => ['required', 'date', 'after_or_equal:activity_start', 'before_or_equal:today'],
-            'file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'mimetypes:application/pdf,image/jpeg,image/png', 'max:'.(int) config('semangat.jp.certificates.max_kb')],
+            'file' => ['required', 'file', 'extensions:pdf,jpg,jpeg,png', 'mimes:pdf,jpg,jpeg,png', 'mimetypes:application/pdf,image/jpeg,image/png', 'max:'.(int) config('semangat.jp.certificates.max_kb')],
         ], [], __('jp.attributes'))->validate();
 
         /** @var UploadedFile $file */
         $contents = (string) $file->get();
 
         // Cek MIME nyata dari isi berkas (docs/21) — tidak bergantung pada nama/ekstensi atau MIME yang dilaporkan klien.
-        if (! in_array($this->files->mimeType($contents), self::ALLOWED_MIME, true)) {
+        $mime = $this->files->mimeType($contents);
+        if (! isset(self::EXTENSIONS[$mime])) {
             throw ValidationException::withMessages(['file' => __('jp.errors.file_type')]);
         }
 
         $sha256 = hash('sha256', $contents);
         $this->rejectDuplicate($employeeId, $sha256, $data);
 
-        $path = $this->files->put($contents, strtolower($file->getClientOriginalExtension()) ?: (string) $file->extension());
+        $path = $this->files->put($contents, self::EXTENSIONS[$mime]);
 
         try {
             return DB::transaction(function () use ($user, $employeeId, $data, $path, $sha256) {
+                Employee::query()->whereKey($employeeId)->lockForUpdate()->first();
+                $this->rejectDuplicate($employeeId, $sha256, $data);
+
                 $record = JpRecord::query()->create([
                     'employee_id' => $employeeId,
                     'year' => Carbon::parse($data['activity_end'])->year,
@@ -90,6 +99,9 @@ class UploadCertificate
 
                 return $record;
             });
+        } catch (UniqueConstraintViolationException) {
+            $this->files->delete($path);
+            throw ValidationException::withMessages(['file' => __('jp.errors.duplicate')]);
         } catch (\Throwable $e) {
             $this->files->delete($path);
             throw $e;

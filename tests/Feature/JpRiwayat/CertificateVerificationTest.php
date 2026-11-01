@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Fondasi\Actions\AssignRole;
 use App\Modules\Fondasi\Enums\AuditAction;
 use App\Modules\Fondasi\Enums\Role;
 use App\Modules\Fondasi\Models\AuditLog;
@@ -98,4 +99,34 @@ it('JPR-02 koord. OPD tidak memverifikasi sertifikatnya sendiri dan tidak meliha
 it('JPR-02 koreksi JP verifikator divalidasi (> 0)', function () {
     expect(fn () => app(VerifyCertificate::class)->verify($this->koordinator, $this->record, '0'))->toThrow(ValidationException::class);
     expect($this->record->refresh()->status)->toBe(JpStatus::Pending);
+})->group('jp');
+
+it('JPR-02 koord. OPD yang merangkap auditor hanya memverifikasi OPD penugasannya, bukan seluruh kabupaten', function () {
+    $otherOpd = OrgUnit::factory()->create();
+    $outside = app(UploadCertificate::class)->handle(employeeUser(Employee::factory()->inOpd($otherOpd)->create(['name' => 'Pegawai OPD Lain'])), jpInput(), certificatePdf('luar'));
+    app(AssignRole::class)($this->koordinator, Role::Auditor, 'Penugasan uji');
+    $user = $this->koordinator->refresh();
+
+    expect(fn () => app(VerifyCertificate::class)->verify($user, $outside))->toThrow(AuthorizationException::class);
+    Livewire::actingAs($user)->test(CertificateVerificationList::class)
+        ->assertSee('Pegawai Pengunggah')
+        ->assertDontSee('Pegawai OPD Lain');
+
+    app(VerifyCertificate::class)->verify($user, $this->record->refresh());
+    expect($this->record->refresh()->status)->toBe(JpStatus::Verified);
+})->group('jp');
+
+it('JPR-02 keputusan verifikator memakai status terkini di bawah kunci — salinan basi tidak menimpa keputusan lain', function () {
+    Notification::fake();
+    $stale = $this->record->refresh();
+    $pengelola = userWithRole(Role::Pengelola);
+
+    app(VerifyCertificate::class)->verify($this->koordinator, $this->record->refresh(), '10');
+
+    // Objek $stale masih `pending` di memori; penolakan kedua harus ditolak setelah status dimuat ulang.
+    expect(fn () => app(VerifyCertificate::class)->reject($pengelola, $stale, 'Ditolak bersamaan'))->toThrow(AuthorizationException::class);
+    expect($this->record->refresh())
+        ->status->toBe(JpStatus::Verified)
+        ->reject_reason->toBeNull();
+    Notification::assertNotSentTo($this->owner, CertificateRejected::class);
 })->group('jp');

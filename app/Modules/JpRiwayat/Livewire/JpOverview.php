@@ -3,8 +3,12 @@
 namespace App\Modules\JpRiwayat\Livewire;
 
 use App\Modules\Fondasi\Models\User;
+use App\Modules\Idp\Actions\StartIdp;
 use App\Modules\Idp\Enums\ActivityPortion;
+use App\Modules\Idp\Enums\IdpStatus;
+use App\Modules\Idp\Models\Idp;
 use App\Modules\Integrasi\Models\Employee;
+use App\Modules\JpRiwayat\Actions\IssueLearningReport;
 use App\Modules\JpRiwayat\Actions\UploadCertificate;
 use App\Modules\JpRiwayat\Enums\JpMode;
 use App\Modules\JpRiwayat\Models\JpRecord;
@@ -21,9 +25,11 @@ use Livewire\WithFileUploads;
 
 /**
  * JP saya / JP pegawai dalam cakupan: saldo 20 JP tahun berjalan (JPR-01), unggah sertifikat luar (JPR-02, pemilik saja),
- * riwayat bangkom lengkap lintas tahun (JPR-04).
+ * riwayat bangkom lengkap lintas tahun (JPR-04), Laporan Hasil Pembelajaran IDP `closed` tahun terpilih (JPR-05) —
+ * juga untuk IDP tahun lalu. `?tahun=` memilih tahun awal (tautan notifikasi Laporan).
  *
  * @property-read Collection<int, JpRecord> $records
+ * @property-read Idp|null $closedIdp
  * @property-read Employee $employee
  * @property-read bool $isOwner
  */
@@ -54,7 +60,8 @@ class JpOverview extends Component
             $this->employeeId = $user->employee_id;
         }
 
-        $this->year = (int) now()->year;
+        $year = (int) request()->query('tahun', (string) now()->year);
+        $this->year = $year >= 2000 && $year <= (int) now()->year ? $year : (int) now()->year;
         $this->resetForm();
     }
 
@@ -92,7 +99,19 @@ class JpOverview extends Component
     #[Computed]
     public function years(): array
     {
-        return collect([(int) now()->year])->merge($this->records->pluck('year'))->unique()->sortDesc()->values()->all();
+        $idpYears = Idp::query()->visibleTo($this->user())->where('employee_id', $this->employeeId)->pluck('period_year');
+
+        return collect([(int) now()->year, $this->year])->merge($this->records->pluck('year'))->merge($idpYears)
+            ->map(fn ($y) => (int) $y)->unique()->sortDesc()->values()->all();
+    }
+
+    /** IDP tahun terpilih yang sudah ditutup — sumber Laporan Hasil Pembelajaran (JPR-05). */
+    #[Computed]
+    public function closedIdp(): ?Idp
+    {
+        $idp = StartIdp::current((int) $this->employeeId, $this->year);
+
+        return $idp !== null && $idp->status === IdpStatus::Closed && $this->user()->can('view', $idp) ? $idp->load('learningReport') : null;
     }
 
     /** @return array<int, string> */
@@ -109,7 +128,17 @@ class JpOverview extends Component
 
     public function updatedYear(): void
     {
-        unset($this->balance);
+        unset($this->balance, $this->closedIdp);
+    }
+
+    public function issueReport(IssueLearningReport $issue): void
+    {
+        $idp = $this->closedIdp;
+        abort_unless($this->isOwner && $idp !== null, 403);
+        $this->resetErrorBag();
+        $issue->handle($this->user(), $idp);
+        unset($this->closedIdp);
+        $this->dispatch('toast', type: 'success', message: __('jp.report.queued'));
     }
 
     public function upload(UploadCertificate $upload): void

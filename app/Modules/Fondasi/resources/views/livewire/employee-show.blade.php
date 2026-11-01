@@ -21,6 +21,11 @@
         </dl>
     </x-card>
 
+    {{-- Riwayat bangkom & saldo JP (JPR-04) — cakupan sama dengan profil ini (visibleTo). --}}
+    <a href="{{ $isSelf ? route('jp.records.mine') : route('jp.records.employee', $employee) }}" class="inline-flex min-h-11 items-center gap-1 text-sm text-teal-700 underline-offset-2 hover:underline">
+        <x-heroicon-o-academic-cap class="size-4" aria-hidden="true" />{{ __('fondasi.employees.jp_history') }}
+    </a>
+
     <p class="flex items-start gap-2 text-xs text-muted">
         <x-heroicon-o-arrow-path-rounded-square class="size-4 shrink-0" aria-hidden="true" />
         {{ __('fondasi.employees.synced_note', ['date' => $employee->synced_at->timezone(config('app.timezone'))->translatedFormat('j M Y, H.i').' WITA']) }}

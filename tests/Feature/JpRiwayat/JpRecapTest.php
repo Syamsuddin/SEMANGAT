@@ -1,6 +1,9 @@
 <?php
 
+use App\Modules\Fondasi\Actions\AssignRole;
+use App\Modules\Fondasi\Actions\RevokeRoleAssignment;
 use App\Modules\Fondasi\Enums\Role;
+use App\Modules\Fondasi\Models\RoleAssignment;
 use App\Modules\Integrasi\Models\Employee;
 use App\Modules\Integrasi\Models\OrgUnit;
 use App\Modules\JpRiwayat\Livewire\JpRecapReport;
@@ -35,23 +38,68 @@ it('JPR-06 koord. OPD melihat rekap JP OPD-nya saja, termasuk baris per pegawai'
         ->assertDontSee('Pegawai Beta 1')->assertDontSee('Dinas Beta');
 })->group('jp');
 
-it('JPR-06 CLO melihat agregat kabupaten tanpa identitas; OPD dengan n<5 disamarkan', function () {
+it('JPR-06 CLO melihat agregat kabupaten tanpa identitas; OPD dengan n<5 disamarkan, OPD lain ikut disamarkan agar total tak membukanya', function () {
     $clo = userWithRole(Role::Clo, $this->opdA);
 
     $data = app(JpRecap::class)->forUser($clo, (int) now()->year);
     $alfa = collect($data['opds'])->firstWhere('name', 'Dinas Alfa');
     $beta = collect($data['opds'])->firstWhere('name', 'Dinas Beta');
 
+    // Total − Alfa = Beta bila Alfa tampil; maka Alfa disamarkan komplementer, total tetap tampil (sisa = 2 OPD, n ≥ 5).
     expect($data['scope'])->toBe('regency')
         ->and($data['masked'])->toBeTrue()
         ->and($data['employees'])->toBe([])
-        ->and($alfa['fulfilled'])->toBe(2)
-        ->and($beta['employees'])->toBeNull()
-        ->and($beta['fulfilled'])->toBeNull();
+        ->and($beta)->toMatchArray(['employees' => null, 'fulfilled' => null, 'avg_jp' => null, 'mask' => JpRecap::MASK_SMALL])
+        ->and($alfa)->toMatchArray(['employees' => null, 'fulfilled' => null, 'avg_jp' => null, 'mask' => JpRecap::MASK_COMPLEMENT])
+        ->and($data['total']['employees'])->toBe(8)
+        ->and($data['total']['fulfilled'])->toBe(3);
 
     Livewire::actingAs($clo)->test(JpRecapReport::class)
-        ->assertSee('Dinas Alfa')->assertSee('Dinas Beta')->assertSee('&lt; 5', false)
+        ->assertSee('Dinas Alfa')->assertSee('Dinas Beta')->assertSee('&lt; 5', false)->assertSee('Disamarkan')
         ->assertDontSee('Pegawai Alfa 1');
+})->group('jp');
+
+it('JPR-06 supresi komplementer: total dikurangi OPD yang tampak tidak dapat mengungkap OPD n<5', function () {
+    $gamma = OrgUnit::factory()->create(['name' => 'Dinas Gamma']);
+    Employee::factory()->inOpd($gamma)->count(9)->create();
+    $clo = userWithRole(Role::Clo, $this->opdA);
+
+    $data = app(JpRecap::class)->forUser($clo, (int) now()->year);
+    $rows = collect($data['opds'])->keyBy('name');
+    $shown = $rows->filter(fn (array $row) => $row['employees'] !== null);
+    $hidden = $rows->filter(fn (array $row) => $row['employees'] === null);
+
+    expect($shown->keys()->all())->toBe(['Dinas Gamma'])
+        ->and($hidden->keys()->sort()->values()->all())->toBe(['Dinas Alfa', 'Dinas Beta'])
+        ->and($rows['Dinas Alfa']['mask'])->toBe(JpRecap::MASK_COMPLEMENT)
+        ->and($rows['Dinas Beta']['mask'])->toBe(JpRecap::MASK_SMALL)
+        ->and($data['total']['employees'])->toBe(17)
+        // sisa yang dapat dihitung = gabungan ≥ 2 OPD dengan n ≥ 5, bukan OPD kecil itu sendiri
+        ->and($data['total']['employees'] - $shown->sum('employees'))->toBe(8);
+})->group('jp');
+
+it('JPR-06 koord. OPD yang juga CLO tetap melihat baris pegawai OPD penugasannya di samping agregat kabupaten', function () {
+    $user = userWithRole(Role::KoordinatorOpd, $this->opdA);
+    app(AssignRole::class)($user, Role::Clo, 'Penugasan uji');
+
+    $data = app(JpRecap::class)->forUser($user->refresh(), (int) now()->year);
+    $names = collect($data['employees'])->pluck('name');
+
+    expect($data['scope'])->toBe('regency')
+        ->and($data['masked'])->toBeTrue()
+        ->and($names)->toContain('Pegawai Alfa 1')
+        ->and($names->filter(fn ($n) => str_starts_with($n, 'Pegawai Beta')))->toBeEmpty();
+})->group('jp');
+
+it('JPR-06 izin rekap dicek di setiap permintaan Livewire — dicabut saat halaman terbuka → pembaruan ditolak', function () {
+    $koordinator = userWithRole(Role::KoordinatorOpd, $this->opdA);
+    $page = Livewire::actingAs($koordinator)->test(JpRecapReport::class)->assertSee('Pegawai Alfa 1');
+
+    RoleAssignment::query()->where('user_id', $koordinator->id)->get()
+        ->each(fn (RoleAssignment $a) => app(RevokeRoleAssignment::class)($a, 'Uji cabut'));
+    auth()->setUser($koordinator->refresh());
+
+    $page->set('year', (int) now()->year - 1)->assertForbidden();
 })->group('jp');
 
 it('JPR-06 pengelola melihat seluruh OPD tanpa penyamaran', function () {

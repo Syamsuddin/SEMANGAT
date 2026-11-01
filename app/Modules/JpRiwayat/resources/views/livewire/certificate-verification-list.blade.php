@@ -32,7 +32,7 @@
                         </a>
                         <div class="flex flex-wrap items-end gap-2">
                             <div class="w-32">
-                                <x-input :label="__('jp.verify.jp_correction')" name="jp" id="jp-{{ $record->id }}" type="number" step="0.5" min="0.5" max="999.9" wire:model="jp.{{ $record->id }}" :placeholder="(string) $record->jp" />
+                                <x-input :label="__('jp.verify.jp_correction')" name="jp" id="jp-{{ $record->id }}" type="number" step="0.1" min="0.1" max="999.9" wire:model="jp.{{ $record->id }}" :placeholder="(string) $record->jp" />
                             </div>
                             <x-button wire:click="verify({{ $record->id }})" loading="verify({{ $record->id }})">{{ __('jp.verify.verify') }}</x-button>
                         </div>

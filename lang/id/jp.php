@@ -75,7 +75,8 @@ return [
         'intro_opd' => 'Pemenuhan :target JP pegawai aktif di OPD Anda, dari JP terverifikasi.',
         'intro_regency' => 'Pemenuhan :target JP pegawai aktif per OPD se-kabupaten, dari JP terverifikasi.',
         'masked' => '< :n',
-        'masked_note' => 'Kelompok dengan kurang dari :n pegawai disamarkan untuk melindungi identitas.',
+        'masked_complement' => 'Disamarkan',
+        'masked_note' => 'Kelompok dengan kurang dari :n pegawai disamarkan untuk melindungi identitas. Sel bertanda "Disamarkan" ikut disembunyikan agar kelompok kecil tidak dapat dihitung dari total.',
         'empty' => 'Belum ada pegawai aktif dalam cakupan Anda.',
         'employees' => 'Pegawai aktif',
         'fulfilled' => 'Memenuhi :target JP',
@@ -92,6 +93,8 @@ return [
         'issue_body' => 'PDF ber-QR dirakit dari IDP yang ditutup, rekap JP, bukti, refleksi, dan catatan atasan.',
         'queued' => 'Laporan sedang diterbitkan. Anda akan menerima notifikasi saat siap diunduh.',
         'download' => 'Unduh Laporan Hasil Pembelajaran',
+        'for_year' => 'IDP :year sudah ditutup.',
+        'not_issued' => 'Laporan Hasil Pembelajaran belum diterbitkan pegawai.',
     ],
     'errors' => [
         'duplicate' => 'Sertifikat ini sudah pernah diunggah.',

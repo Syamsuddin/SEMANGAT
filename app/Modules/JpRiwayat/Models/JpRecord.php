@@ -2,6 +2,7 @@
 
 namespace App\Modules\JpRiwayat\Models;
 
+use App\Modules\Fondasi\Enums\Role;
 use App\Modules\Fondasi\Models\User;
 use App\Modules\Idp\Enums\ActivityPortion;
 use App\Modules\Integrasi\Models\Employee;
@@ -87,13 +88,11 @@ class JpRecord extends Model
      */
     public function scopeVerifiableBy(Builder $query, User $user): Builder
     {
-        $scope = DataScope::for($user);
-
         return $query->where('out_jp_records.status', JpStatus::Pending->value)
             ->when($user->employee_id !== null, fn (Builder $q) => $q->where('out_jp_records.employee_id', '!=', $user->employee_id))
-            ->when(! $scope->seesAllEmployees(), fn (Builder $q) => $q->whereIn(
+            ->when(! $user->hasRole(Role::Pengelola->value), fn (Builder $q) => $q->whereIn(
                 'out_jp_records.employee_id',
-                Employee::query()->whereIn('opd_id', $scope->opdIds() ?: [0])->select('hr_employees.id'),
+                Employee::query()->whereIn('opd_id', DataScope::for($user)->opdIds() ?: [0])->select('hr_employees.id'),
             ));
     }
 

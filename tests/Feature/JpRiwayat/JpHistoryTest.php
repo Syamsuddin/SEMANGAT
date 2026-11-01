@@ -11,6 +11,7 @@ use App\Modules\JpRiwayat\Enums\JpStatus;
 use App\Modules\JpRiwayat\Livewire\JpOverview;
 use App\Modules\JpRiwayat\Models\JpRecord;
 use App\Modules\JpRiwayat\Services\JpBalance;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
@@ -65,4 +66,27 @@ it('JPR-04 atasan melihat riwayat bawahan langsung tanpa formulir unggah; berkas
         ->assertHeader('Content-Type', 'application/pdf')
         ->assertHeader('X-Content-Type-Options', 'nosniff')
         ->assertDownload('sertifikat-'.$record->id.'.pdf');
+})->group('jp');
+
+it('JPR-03 sumber yang sama tidak dapat tercatat dua kali — ditegakkan UNIQUE di basis data', function () {
+    $source = IdpActivity::query()->create(['idp_item_id' => idpWithItems($this->employee)->items[0]->id, 'portion' => 70, 'title' => 'Proyek perubahan']);
+    $attributes = ['sourceable_type' => $source->getMorphClass(), 'sourceable_id' => $source->id, 'status' => JpStatus::Verified];
+    JpRecord::factory()->for($this->employee, 'employee')->create($attributes);
+
+    expect(fn () => JpRecord::factory()->for($this->employee, 'employee')->create($attributes))->toThrow(UniqueConstraintViolationException::class);
+
+    // Pencatatan otomatis menemukan baris yang ada, tidak menambah JP.
+    app(RecordJp::class)->automatic($this->employee->id, $source, 'Proyek perubahan', ActivityPortion::Workplace, JpMode::NonClassical, 6, Carbon::parse(now()->year.'-02-01'), Carbon::parse(now()->year.'-02-20'));
+    expect(JpRecord::query()->count())->toBe(1);
+})->group('jp');
+
+it('JPR-04 profil pegawai menautkan saldo & riwayat JP-nya; tautan hanya membuka pegawai dalam cakupan', function () {
+    $subordinate = Employee::factory()->supervisedBy($this->employee)->create();
+
+    $this->actingAs($this->user)->get(route('fondasi.employees.show', $subordinate))
+        ->assertOk()->assertSee(route('jp.records.employee', $subordinate), false)->assertSee('Lihat saldo &amp; riwayat JP', false);
+    $this->actingAs($this->user)->get(route('fondasi.employees.show', $this->employee))
+        ->assertOk()->assertSee(route('jp.records.mine'), false);
+    $this->actingAs($this->user)->get(route('jp.records.employee', $subordinate))->assertOk();
+    $this->actingAs($this->user)->get(route('jp.records.employee', Employee::factory()->create()))->assertForbidden();
 })->group('jp');

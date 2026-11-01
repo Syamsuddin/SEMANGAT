@@ -18,6 +18,6 @@ interface DocumentContent
     /** @return array<string, mixed> */
     public function data(Model $documentable): array;
 
-    /** Halaman tempat dokumen dapat diunduh — ditautkan di notifikasi "dokumen siap". */
+    /** Halaman tempat dokumen dapat diunduh atau diterbitkan ulang — ditautkan di notifikasi "dokumen siap" & "gagal dibuat". */
     public function readyUrl(Model $documentable): string;
 }

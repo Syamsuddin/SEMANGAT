@@ -6,6 +6,7 @@ use App\Modules\JpRiwayat\Enums\JpStatus;
 use App\Modules\JpRiwayat\Livewire\JpOverview;
 use App\Modules\JpRiwayat\Models\Certificate;
 use App\Modules\JpRiwayat\Models\JpRecord;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -86,6 +87,8 @@ it('JPR-02 validasi unggahan: MIME dari isi, tanggal, JP > 0', function (array $
 })->with([
     'teks berkedok .pdf' => fn () => [[], UploadedFile::fake()->createWithContent('sertifikat.pdf', 'bukan pdf'), 'file'],
     'ekstensi terlarang' => fn () => [[], UploadedFile::fake()->createWithContent('sertifikat.docx', "%PDF-1.4\n"), 'file'],
+    'PDF asli bernama .exe' => fn () => [[], UploadedFile::fake()->createWithContent('sertifikat.exe', "%PDF-1.4\n% asli\n%%EOF\n"), 'file'],
+    'PDF asli bernama .html' => fn () => [[], UploadedFile::fake()->createWithContent('sertifikat.html', "%PDF-1.4\n% asli\n%%EOF\n"), 'file'],
     'selesai sebelum mulai' => fn () => [['activity_start' => now()->subDays(2)->toDateString(), 'activity_end' => now()->subDays(5)->toDateString()], certificatePdf(), 'activity_end'],
     'tanggal di masa depan' => fn () => [['activity_start' => now()->addDay()->toDateString(), 'activity_end' => now()->addDays(2)->toDateString()], certificatePdf(), 'activity_start'],
     'JP nol' => fn () => [['jp' => '0'], certificatePdf(), 'jp'],
@@ -95,4 +98,35 @@ it('JPR-02 gambar PNG diterima sebagai sertifikat', function () {
     app(UploadCertificate::class)->handle($this->user, jpInput(), UploadedFile::fake()->image('sertifikat.png', 60, 40));
 
     expect(JpRecord::query()->sole()->certificate->file_path)->toEndWith('.png');
+})->group('jp');
+
+it('JPR-02 ekstensi berkas simpanan diturunkan dari MIME isi, bukan dari nama berkas klien', function () {
+    app(UploadCertificate::class)->handle($this->user, jpInput(), UploadedFile::fake()->createWithContent('sertifikat.jpg', "%PDF-1.4\n% isi pdf\n%%EOF\n"));
+
+    $record = JpRecord::query()->with('certificate')->sole();
+    expect($record->certificate->file_path)->toEndWith('.pdf');
+
+    $this->actingAs($this->user)->get(route('jp.certificates.download', $record))
+        ->assertOk()
+        ->assertHeader('Content-Type', 'application/pdf')
+        ->assertHeader('Content-Disposition', 'attachment; filename="sertifikat-'.$record->id.'.pdf"');
+})->group('jp');
+
+it('JPR-02 kunci `file` pada isian tidak menggantikan berkas yang sebenarnya diunggah', function () {
+    // PDF asli (lolos cek MIME isi) yang hanya melanggar batas ukuran — harus ditolak walau isian membawa berkas kecil yang sah.
+    $tooLarge = UploadedFile::fake()->createWithContent('besar.pdf', "%PDF-1.4\n".str_repeat('0', ((int) config('semangat.jp.certificates.max_kb') + 1) * 1024));
+
+    expect(fn () => app(UploadCertificate::class)->handle($this->user, jpInput(['file' => certificatePdf('kecil')]), $tooLarge))
+        ->toThrow(fn (ValidationException $e) => expect($e->errors())->toHaveKey('file'));
+    expect(JpRecord::query()->count())->toBe(0)
+        ->and(Storage::disk(config('semangat.jp.certificates.disk'))->allFiles())->toBe([]);
+})->group('jp');
+
+it('JPR-02 berkas gagal tersimpan di disk → unggahan gagal, tidak ada CatatanJP/sertifikat tanpa berkas', function () {
+    $disk = Mockery::mock(Filesystem::class);
+    $disk->shouldReceive('put')->once()->andReturnFalse();
+    Storage::shouldReceive('disk')->andReturn($disk);
+
+    expect(fn () => app(UploadCertificate::class)->handle($this->user, jpInput(), certificatePdf()))->toThrow(RuntimeException::class);
+    expect(JpRecord::query()->count())->toBe(0)->and(Certificate::query()->count())->toBe(0);
 })->group('jp');

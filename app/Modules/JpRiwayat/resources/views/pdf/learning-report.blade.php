@@ -16,7 +16,10 @@
     @foreach ($idp->items as $item)
         <h3>{{ $item->position }}. {{ $item->competency->name }}</h3>
         <table class="grid">
-            <tr><th width="34%">{{ __('jp.pdf.level') }}</th><td>{{ __('idp.editor.level_range', ['start' => $item->start_level, 'target' => $item->target_level]) }}</td></tr>
+            <tr><th width="34%">{{ __('jp.pdf.level') }}</th><td>{{ __('idp.editor.level_range', ['start' => $item->start_level, 'target' => $item->target_level]) }}
+                {{-- Level awal dari kesenjangan indikatif/sementara tidak boleh tampil bergaya terverifikasi (docs/20). --}}
+                <br><span @class(['muted' => $item->gap?->confidence === \App\Support\Enums\Confidence::Verified, 'flag' => $item->gap?->confidence !== \App\Support\Enums\Confidence::Verified])>{{ $item->gap ? __('idp.editor.level_confidence', ['label' => $item->gap->confidence->label()]) : __('idp.editor.level_unassessed') }}</span>
+            </td></tr>
             <tr><th>{{ __('idp.editor.work_result') }}</th><td>
                 @if ($item->workResult)
                     {{ $item->workResult->code }} — {{ $item->workResult->description }}

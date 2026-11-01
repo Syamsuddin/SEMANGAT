@@ -1,13 +1,13 @@
 <div class="space-y-4">
     <div class="flex flex-wrap items-center justify-between gap-2">
         <h1 class="text-xl font-semibold text-navy">{{ __('fondasi.notifications.title') }}</h1>
-        @if ($this->notifications->whereNull('read_at')->isNotEmpty())
+        @if ($this->unreadCount > 0)
             <x-button variant="ghost" size="sm" wire:click="markAllRead" loading="markAllRead">{{ __('fondasi.notifications.mark_all') }}</x-button>
         @endif
     </div>
 
-    <div wire:loading.delay wire:target="open,markAllRead"><x-skeleton :lines="3" /></div>
-    <div wire:loading.remove wire:target="open,markAllRead">
+    <div wire:loading.delay wire:target="open,markAllRead,loadMore"><x-skeleton :lines="3" /></div>
+    <div wire:loading.remove wire:target="open,markAllRead,loadMore">
         @if ($this->notifications->isEmpty())
             <x-empty-state icon="bell" :title="__('fondasi.notifications.empty')" />
         @else
@@ -35,6 +35,11 @@
                     </li>
                 @endforeach
             </ul>
+            @if ($this->hasMore)
+                <div class="mt-3 flex justify-center">
+                    <x-button variant="secondary" wire:click="loadMore" loading="loadMore" class="w-full sm:w-auto">{{ __('fondasi.notifications.load_more') }}</x-button>
+                </div>
+            @endif
         @endif
     </div>
 </div>

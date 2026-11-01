@@ -24,6 +24,7 @@ class IdpReturned extends Notification
             'period_year' => $this->idp->period_year,
             'message' => __('idp.notifications.returned', ['name' => $this->idp->employee->name, 'year' => $this->idp->period_year]),
             'note' => $this->note,
+            'url' => route('idp.plans.mine', absolute: false),
         ];
     }
 }

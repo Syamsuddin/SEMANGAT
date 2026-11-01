@@ -3,6 +3,7 @@
 namespace App\Modules\JpRiwayat\Policies;
 
 use App\Modules\Fondasi\Enums\Permission;
+use App\Modules\Fondasi\Enums\Role;
 use App\Modules\Fondasi\Models\User;
 use App\Modules\JpRiwayat\Enums\JpStatus;
 use App\Modules\JpRiwayat\Models\JpRecord;
@@ -29,8 +30,7 @@ class JpRecordPolicy
             return false;
         }
 
-        $scope = DataScope::for($user);
-
-        return $scope->seesAllEmployees() || in_array($record->employee->opd_id, $scope->opdIds(), true);
+        // Seluruh kabupaten hanya pengelola — auditor (B) baca-saja; koord. OPD hanya OPD penugasannya, juga bila merangkap auditor.
+        return $user->hasRole(Role::Pengelola->value) || in_array($record->employee->opd_id, DataScope::for($user)->opdIds(), true);
     }
 }

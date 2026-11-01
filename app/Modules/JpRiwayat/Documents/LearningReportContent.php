@@ -30,7 +30,7 @@ class LearningReportContent implements DocumentContent
     /** @param  Idp  $documentable */
     public function data(Model $documentable): array
     {
-        $documentable->load(['employee.position', 'employee.opd', 'supervisor', 'items.competency', 'items.workResult', 'items.activities', 'checkins']);
+        $documentable->load(['employee.position', 'employee.opd', 'supervisor', 'items.competency', 'items.gap', 'items.workResult', 'items.activities', 'checkins']);
 
         return [
             'idp' => $documentable,
@@ -46,8 +46,9 @@ class LearningReportContent implements DocumentContent
         ];
     }
 
+    /** @param  Idp  $documentable  Halaman JP tahun periode IDP — memuat tombol unduh, atau terbitkan ulang bila gagal. */
     public function readyUrl(Model $documentable): string
     {
-        return route('jp.records.mine');
+        return route('jp.records.mine', ['tahun' => $documentable->period_year]);
     }
 }

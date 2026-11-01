@@ -29,7 +29,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['employee_id', 'year', 'status']);
-            $table->index(['sourceable_type', 'sourceable_id']);
+            // UNIQUE menegakkan idempotensi RecordJp::automatic (JPR-03); NULL (unggah manual) boleh berulang.
+            $table->unique(['sourceable_type', 'sourceable_id']);
         });
 
         DB::statement('ALTER TABLE out_jp_records ADD CONSTRAINT out_jp_records_jp_positive CHECK (jp > 0)');

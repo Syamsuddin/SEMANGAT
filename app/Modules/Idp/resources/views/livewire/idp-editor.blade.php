@@ -179,6 +179,14 @@
                         </x-button>
                     @else
                         <p class="flex items-center gap-2 text-sm text-info" role="status"><x-heroicon-o-clock class="size-4" aria-hidden="true" />{{ __('idp.editor.plan_processing') }}</p>
+                        @if ($idp->status === \App\Modules\Idp\Enums\IdpStatus::Active)
+                            <div class="flex flex-wrap items-center gap-2">
+                                <p class="text-xs text-muted">{{ __('idp.editor.plan_retry_hint') }}</p>
+                                <x-button variant="secondary" size="sm" wire:click="retryPlan" loading="retryPlan">
+                                    <x-heroicon-o-arrow-path class="size-4" aria-hidden="true" />{{ __('idp.editor.plan_retry') }}
+                                </x-button>
+                            </div>
+                        @endif
                     @endif
                     <div x-data="{ text: @js($this->expectation) }" class="space-y-2">
                         <label for="expectation" class="block text-sm font-medium text-ink">{{ __('idp.expectation.title') }}</label>

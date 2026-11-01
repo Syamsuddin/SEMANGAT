@@ -176,11 +176,10 @@ function certificatePdf(string $seed = 'a'): UploadedFile
 /** Isian unggah sertifikat luar yang sah (JPR-02). */
 function jpInput(array $overrides = []): array
 {
-    $year = (int) now()->year;
-
     return $overrides + [
         'title' => 'Pelatihan Analisis Kebijakan', 'issuer' => 'BPSDM Provinsi', 'number' => 'SRT-001',
         'portion' => 10, 'mode' => 'classical', 'jp' => '12',
-        'activity_start' => now()->subDays(10)->toDateString(), 'activity_end' => now()->subDays(8)->toDateString(),
+        // Selalu di tahun berjalan (juga 1–8 Januari) dan tidak melewati hari ini.
+        'activity_start' => now()->subDays(10)->max(now()->startOfYear())->toDateString(), 'activity_end' => now()->subDays(8)->max(now()->startOfYear())->toDateString(),
     ];
 }

@@ -5,6 +5,7 @@ namespace App\Modules\JpRiwayat\Services;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 /**
  * Berkas sertifikat luar (JPR-02): nama berkas diganti UUID, disimpan di object storage (bukan public/),
@@ -15,7 +16,11 @@ class CertificateStore
     public function put(string $contents, string $extension): string
     {
         $path = 'certificates/'.Str::uuid()->toString().'.'.strtolower($extension);
-        $this->disk()->put($path, $contents);
+
+        // Disk ber-`throw => false` mengembalikan false saat gagal — jangan catat sertifikat tanpa berkas.
+        if (! $this->disk()->put($path, $contents)) {
+            throw new RuntimeException('Berkas sertifikat gagal disimpan: '.$path);
+        }
 
         return $path;
     }

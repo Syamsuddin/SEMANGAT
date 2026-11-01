@@ -13,6 +13,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 /**
  * Satu-satunya pembuat PDF (docs/12, keputusan A5): Blade → dompdf + QR verifikasi → disk dokumen → out_issued_documents.
@@ -44,7 +45,10 @@ class DocumentIssuer
             ->output();
 
         $path = 'documents/'.$type->value.'/'.$uuid.'.pdf';
-        Storage::disk($this->disk())->put($path, $bytes);
+        // Disk ber-`throw => false` mengembalikan false saat gagal — job gagal (lalu diulang) alih-alih mencatat PDF yang tak ada.
+        if (! Storage::disk($this->disk())->put($path, $bytes)) {
+            throw new RuntimeException('PDF gagal disimpan: '.$path);
+        }
 
         return IssuedDocument::query()->create([
             'uuid' => $uuid,
