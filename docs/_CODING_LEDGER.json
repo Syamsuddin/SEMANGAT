@@ -21,22 +21,38 @@
       "step": 7,
       "detik": 1493,
       "tok_est": 44599
+    },
+    {
+      "mulai": "2026-11-01T06:47:18+00:00",
+      "selesai": null,
+      "step": 0,
+      "detik": 0,
+      "tok_est": 0
     }
   ],
-  "step_berjalan": null,
+  "step_berjalan": {
+    "no": 1,
+    "nama": "Skema/migrasi",
+    "mulai": "2026-11-01T06:49:35+00:00"
+  },
   "blueprint": {
     "sidik_awal": "618bcde2e46d608f",
-    "sidik": "13698e85eaf500c1",
+    "sidik": "6f087af5d8542b72",
     "dokumen": 27,
-    "disegel": "2026-11-01T05:43:42+00:00",
-    "sidik_sebelumnya": "618bcde2e46d608f",
+    "disegel": "2026-11-01T06:47:18+00:00",
     "riwayat": [
       {
         "dari": "618bcde2e46d608f",
         "ke": "13698e85eaf500c1",
         "pada": "2026-11-01T05:43:42+00:00"
+      },
+      {
+        "dari": "13698e85eaf500c1",
+        "ke": "6f087af5d8542b72",
+        "pada": "2026-11-01T06:47:18+00:00"
       }
-    ]
+    ],
+    "sidik_sebelumnya": "13698e85eaf500c1"
   },
   "riwayat_fitur": [
     {
@@ -494,5 +510,89 @@
     "tok_terukur": 0,
     "step": 14,
     "fitur": 2
+  },
+  "fitur_aktif": {
+    "fitur": "F4 JP & Laporan",
+    "rute": "Fitur baru (vertical slice)",
+    "mulai": "2026-11-01T06:49:29+00:00",
+    "rencana": [
+      "app/Modules/JpRiwayat/JpRiwayatServiceProvider.php",
+      "app/Modules/JpRiwayat/routes.php",
+      "app/Modules/JpRiwayat/Database/Migrations/2026_11_01_100000_create_out_jp_records_table.php",
+      "app/Modules/JpRiwayat/Database/Migrations/2026_11_01_100100_create_out_certificates_table.php",
+      "app/Modules/JpRiwayat/Database/Factories/JpRecordFactory.php",
+      "app/Modules/JpRiwayat/Enums/JpStatus.php",
+      "app/Modules/JpRiwayat/Enums/JpMode.php",
+      "app/Modules/JpRiwayat/Models/JpRecord.php",
+      "app/Modules/JpRiwayat/Models/Certificate.php",
+      "app/Modules/JpRiwayat/Policies/JpRecordPolicy.php",
+      "app/Modules/JpRiwayat/Services/JpBalance.php",
+      "app/Modules/JpRiwayat/Services/JpRecap.php",
+      "app/Modules/JpRiwayat/Services/CertificateStore.php",
+      "app/Modules/JpRiwayat/Actions/UploadCertificate.php",
+      "app/Modules/JpRiwayat/Actions/VerifyCertificate.php",
+      "app/Modules/JpRiwayat/Actions/RecordJp.php",
+      "app/Modules/JpRiwayat/Actions/IssueLearningReport.php",
+      "app/Modules/JpRiwayat/Notifications/CertificateVerified.php",
+      "app/Modules/JpRiwayat/Notifications/CertificateRejected.php",
+      "app/Modules/JpRiwayat/Documents/LearningReportContent.php",
+      "app/Modules/JpRiwayat/Livewire/JpOverview.php",
+      "app/Modules/JpRiwayat/Livewire/CertificateVerificationList.php",
+      "app/Modules/JpRiwayat/Livewire/JpRecapReport.php",
+      "app/Modules/JpRiwayat/Http/Controllers/CertificateDownloadController.php",
+      "app/Modules/JpRiwayat/Http/Controllers/LearningReportDownloadController.php",
+      "app/Modules/JpRiwayat/resources/views/livewire/jp-overview.blade.php",
+      "app/Modules/JpRiwayat/resources/views/livewire/certificate-verification-list.blade.php",
+      "app/Modules/JpRiwayat/resources/views/livewire/jp-recap-report.blade.php",
+      "app/Modules/JpRiwayat/resources/views/pdf/learning-report.blade.php",
+      "lang/id/jp.php",
+      "app/Support/DocumentIssuer.php",
+      "app/Support/Documents/DocumentContent.php",
+      "app/Support/Documents/IssueDocumentJob.php",
+      "app/Modules/Fondasi/Notifications/DocumentReady.php",
+      "app/Modules/Fondasi/Livewire/NotificationCenter.php",
+      "app/Modules/Fondasi/resources/views/livewire/notification-center.blade.php",
+      "app/Modules/Fondasi/routes.php",
+      "app/Modules/Fondasi/FondasiServiceProvider.php",
+      "app/Modules/Fondasi/Services/NavigationMenu.php",
+      "app/Modules/Fondasi/Enums/Permission.php",
+      "app/Modules/Fondasi/Database/Seeders/RolePermissionSeeder.php",
+      "app/Modules/Fondasi/Livewire/Home.php",
+      "app/Modules/Fondasi/resources/views/livewire/home.blade.php",
+      "lang/id/fondasi.php",
+      "resources/views/layouts/app.blade.php",
+      "app/Modules/Idp/Actions/PublishLearningPlan.php",
+      "app/Modules/Idp/Documents/LearningPlanContent.php",
+      "app/Modules/Idp/Livewire/IdpEditor.php",
+      "app/Modules/Idp/resources/views/livewire/idp-editor.blade.php",
+      "app/Modules/Idp/Models/Idp.php",
+      "lang/id/idp.php",
+      "config/semangat.php",
+      "bootstrap/providers.php",
+      "tests/Unit/JpRiwayat/JpBalanceTest.php",
+      "tests/Feature/JpRiwayat/CertificateUploadTest.php",
+      "tests/Feature/JpRiwayat/CertificateVerificationTest.php",
+      "tests/Feature/JpRiwayat/JpHistoryTest.php",
+      "tests/Feature/JpRiwayat/LearningReportTest.php",
+      "tests/Feature/JpRiwayat/JpRecapTest.php",
+      "tests/Feature/Fondasi/NotificationCenterTest.php",
+      "tests/Scope/JpScopeTest.php",
+      "tests/Feature/CycleTest.php",
+      "tests/Feature/Idp/LearningPlanTest.php",
+      "tests/Scope/IdpScopeTest.php",
+      "tests/Arch/ArchitectureTest.php",
+      "docs/23_ACCEPTANCE_CRITERIA.md",
+      "docs/_archive/23-F4.md",
+      "docs/03_ROADMAP.md",
+      "docs/_MANIFEST.json",
+      "docs/07_DATA_MODEL.md",
+      "docs/user/jp.md",
+      "docs/_CODING_LEDGER.json",
+      "docs/_TOKEN_LEDGER.json"
+    ],
+    "total_step": 0,
+    "step": [],
+    "detik": 0,
+    "tok_est": 0
   }
 }
