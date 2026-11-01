@@ -19,6 +19,12 @@
         <x-empty-state icon="identification" :title="__('fondasi.home.no_employee')" />
     @endif
 
+    @if ($jpBalance)
+        <x-stat-tile :label="__('jp.overview.balance_label', ['year' => $jpBalance['year']])"
+                     :value="__('jp.overview.balance', ['verified' => \Illuminate\Support\Number::format($jpBalance['verified'], maxPrecision: 1, locale: 'id'), 'target' => $jpBalance['target']])"
+                     :href="route('jp.records.mine')">{{ $jpBalance['fulfilled'] ? __('jp.overview.fulfilled') : __('jp.overview.not_fulfilled') }} · {{ __('jp.overview.open') }}</x-stat-tile>
+    @endif
+
     @if ($teamCount > 0)
         <x-stat-tile :label="__('fondasi.home.team_label')" :value="$teamCount" :href="route('fondasi.team.index')">{{ __('fondasi.home.open_team') }}</x-stat-tile>
     @endif

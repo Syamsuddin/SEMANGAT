@@ -24,6 +24,7 @@ class IdpSubmitted extends Notification
             'period_year' => $this->idp->period_year,
             'message' => __('idp.notifications.submitted', ['name' => $this->idp->employee->name, 'year' => $this->idp->period_year]),
             'note' => $this->note,
+            'url' => route('idp.team.index', absolute: false),
         ];
     }
 }

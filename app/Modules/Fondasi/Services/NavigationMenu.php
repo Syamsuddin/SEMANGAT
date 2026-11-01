@@ -17,6 +17,7 @@ class NavigationMenu
         if ($user->employee_id !== null) {
             $items[] = ['label' => __('kompetensi.nav.profile'), 'route' => 'kompetensi.profile.show', 'icon' => 'academic-cap', 'active' => 'kompetensi.profile.*'];
             $items[] = ['label' => __('idp.nav.mine'), 'route' => 'idp.plans.mine', 'icon' => 'clipboard-document-list', 'active' => 'idp.plans.*'];
+            $items[] = ['label' => __('jp.nav.mine'), 'route' => 'jp.records.mine', 'icon' => 'clock', 'active' => 'jp.records.*'];
         }
 
         if ($user->hasRole(Role::Atasan->value)) {
@@ -27,6 +28,14 @@ class NavigationMenu
 
         if ($user->can(Permission::IdpViewUnlinked->value) && ! $user->hasRole(Role::Atasan->value)) {
             $items[] = ['label' => __('idp.nav.unlinked'), 'route' => 'idp.unlinked.index', 'icon' => 'link-slash', 'active' => 'idp.unlinked.*'];
+        }
+
+        if ($user->can(Permission::JpVerify->value)) {
+            $items[] = ['label' => __('jp.nav.verify'), 'route' => 'jp.certificates.index', 'icon' => 'document-magnifying-glass', 'active' => 'jp.certificates.*'];
+        }
+
+        if ($user->can(Permission::JpViewRecap->value)) {
+            $items[] = ['label' => __('jp.nav.recap'), 'route' => 'jp.recap.index', 'icon' => 'presentation-chart-bar', 'active' => 'jp.recap.*'];
         }
 
         if ($user->can(Permission::CompetencyViewAggregate->value)) {

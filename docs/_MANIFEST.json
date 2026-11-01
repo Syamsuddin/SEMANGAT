@@ -399,7 +399,9 @@
       "archive": "docs/_archive/23-F3.md"
     },
     "F4": {
-      "status": "pending"
+      "status": "accepted",
+      "accepted_at": "2026-11-01",
+      "archive": "docs/_archive/23-F4.md"
     },
     "F5": {
       "status": "pending"

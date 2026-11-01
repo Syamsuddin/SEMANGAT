@@ -53,6 +53,15 @@ return [
         'disk' => env('SEMANGAT_DOCUMENT_DISK', env('FILESYSTEM_DISK', 'local')),
     ],
 
+    // M12 (F4): target tahunan JP & berkas sertifikat luar (JPR-02, docs/21 § Validasi input). Produksi: object storage S3.
+    'jp' => [
+        'annual_target' => 20,
+        'certificates' => [
+            'disk' => env('SEMANGAT_CERTIFICATE_DISK', env('SEMANGAT_DOCUMENT_DISK', env('FILESYSTEM_DISK', 'local'))),
+            'max_kb' => 10240,
+        ],
+    ],
+
     'verify_base_url' => env('SEMANGAT_VERIFY_BASE_URL', env('APP_URL')),
 
     'features' => [],

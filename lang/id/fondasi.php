@@ -72,6 +72,7 @@ return [
         'open_team' => 'Lihat tim',
     ],
     'employees' => [
+        'jp_history' => 'Lihat saldo & riwayat JP',
         'title' => 'Data pegawai',
         'search' => 'Cari nama atau NIP',
         'status' => 'Status',
@@ -110,5 +111,16 @@ return [
         'issued_at' => 'Tanggal terbit',
         'hash' => 'Sidik digital (SHA-256)',
         'note' => 'Cocokkan sidik digital dengan berkas yang Anda terima. Isi dokumen tidak ditampilkan di halaman ini.',
+    ],
+    'notifications' => [
+        'title' => 'Notifikasi',
+        'empty' => 'Belum ada notifikasi.',
+        'unread' => 'Belum dibaca',
+        'unread_count' => 'Notifikasi, :count belum dibaca',
+        'mark_all' => 'Tandai semua dibaca',
+        'load_more' => 'Muat notifikasi lebih lama',
+        'all_read' => 'Semua notifikasi ditandai dibaca.',
+        'document_ready' => ':type Anda sudah terbit dan siap diunduh.',
+        'document_failed' => ':type gagal dibuat, coba lagi.',
     ],
 ];

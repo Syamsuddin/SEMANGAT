@@ -2,7 +2,7 @@
 
 namespace App\Modules\Fondasi\Enums;
 
-/** Izin spatie (F1–F3) — peta peran → izin di RolePermissionSeeder. */
+/** Izin spatie (F1–F4) — peta peran → izin di RolePermissionSeeder. */
 enum Permission: string
 {
     case EmployeeViewAny = 'employee.view_any';
@@ -14,6 +14,8 @@ enum Permission: string
     case CompetencyManage = 'competency.manage';
     case CompetencyViewAggregate = 'competency.view_aggregate';
     case IdpViewUnlinked = 'idp.view_unlinked';
+    case JpVerify = 'jp.verify';
+    case JpViewRecap = 'jp.view_recap';
 
     /** @return list<Role> */
     public function roles(): array
@@ -30,6 +32,10 @@ enum Permission: string
             self::CompetencyViewAggregate => [Role::KoordinatorOpd, Role::Pengelola, Role::Clo, Role::DewanPengarah, Role::Auditor],
             // M06 IDP-10: daftar "IDP tanpa tautan SKP" — atasan T, koord. O, pengelola/auditor B (docs/05; clo hanya agregat).
             self::IdpViewUnlinked => [Role::Atasan, Role::KoordinatorOpd, Role::Pengelola, Role::Auditor],
+            // M12 JPR-02: verifikator sertifikat luar = pengelola (K) / koord. OPD (O) (docs/06 § 6).
+            self::JpVerify => [Role::KoordinatorOpd, Role::Pengelola],
+            // M12 JPR-06: rekap O/K/A/B (docs/05; clo & dewan agregat tanpa identitas bila n<5).
+            self::JpViewRecap => [Role::KoordinatorOpd, Role::Pengelola, Role::Clo, Role::DewanPengarah, Role::Auditor],
         };
     }
 }

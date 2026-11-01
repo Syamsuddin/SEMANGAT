@@ -21,22 +21,34 @@
       "step": 7,
       "detik": 1493,
       "tok_est": 44599
+    },
+    {
+      "mulai": "2026-11-01T06:47:18+00:00",
+      "selesai": null,
+      "step": 7,
+      "detik": 1206,
+      "tok_est": 62542
     }
   ],
   "step_berjalan": null,
   "blueprint": {
     "sidik_awal": "618bcde2e46d608f",
-    "sidik": "13698e85eaf500c1",
+    "sidik": "6f087af5d8542b72",
     "dokumen": 27,
-    "disegel": "2026-11-01T05:43:42+00:00",
-    "sidik_sebelumnya": "618bcde2e46d608f",
+    "disegel": "2026-11-01T06:47:18+00:00",
     "riwayat": [
       {
         "dari": "618bcde2e46d608f",
         "ke": "13698e85eaf500c1",
         "pada": "2026-11-01T05:43:42+00:00"
+      },
+      {
+        "dari": "13698e85eaf500c1",
+        "ke": "6f087af5d8542b72",
+        "pada": "2026-11-01T06:47:18+00:00"
       }
-    ]
+    ],
+    "sidik_sebelumnya": "13698e85eaf500c1"
   },
   "riwayat_fitur": [
     {
@@ -486,13 +498,244 @@
         "FK pln_idp_activities.program_id → lrn_programs (F5)"
       ],
       "selesai": "2026-11-01T06:12:43+00:00"
+    },
+    {
+      "fitur": "F4 JP & Laporan",
+      "rute": "Fitur baru (vertical slice)",
+      "mulai": "2026-11-01T06:49:29+00:00",
+      "rencana": [
+        "app/Modules/JpRiwayat/JpRiwayatServiceProvider.php",
+        "app/Modules/JpRiwayat/routes.php",
+        "app/Modules/JpRiwayat/Database/Migrations/2026_11_01_100000_create_out_jp_records_table.php",
+        "app/Modules/JpRiwayat/Database/Migrations/2026_11_01_100100_create_out_certificates_table.php",
+        "app/Modules/JpRiwayat/Database/Factories/JpRecordFactory.php",
+        "app/Modules/JpRiwayat/Enums/JpStatus.php",
+        "app/Modules/JpRiwayat/Enums/JpMode.php",
+        "app/Modules/JpRiwayat/Models/JpRecord.php",
+        "app/Modules/JpRiwayat/Models/Certificate.php",
+        "app/Modules/JpRiwayat/Policies/JpRecordPolicy.php",
+        "app/Modules/JpRiwayat/Services/JpBalance.php",
+        "app/Modules/JpRiwayat/Services/JpRecap.php",
+        "app/Modules/JpRiwayat/Services/CertificateStore.php",
+        "app/Modules/JpRiwayat/Actions/UploadCertificate.php",
+        "app/Modules/JpRiwayat/Actions/VerifyCertificate.php",
+        "app/Modules/JpRiwayat/Actions/RecordJp.php",
+        "app/Modules/JpRiwayat/Actions/IssueLearningReport.php",
+        "app/Modules/JpRiwayat/Notifications/CertificateVerified.php",
+        "app/Modules/JpRiwayat/Notifications/CertificateRejected.php",
+        "app/Modules/JpRiwayat/Documents/LearningReportContent.php",
+        "app/Modules/JpRiwayat/Livewire/JpOverview.php",
+        "app/Modules/JpRiwayat/Livewire/CertificateVerificationList.php",
+        "app/Modules/JpRiwayat/Livewire/JpRecapReport.php",
+        "app/Modules/JpRiwayat/Http/Controllers/CertificateDownloadController.php",
+        "app/Modules/JpRiwayat/Http/Controllers/LearningReportDownloadController.php",
+        "app/Modules/JpRiwayat/resources/views/livewire/jp-overview.blade.php",
+        "app/Modules/JpRiwayat/resources/views/livewire/certificate-verification-list.blade.php",
+        "app/Modules/JpRiwayat/resources/views/livewire/jp-recap-report.blade.php",
+        "app/Modules/JpRiwayat/resources/views/pdf/learning-report.blade.php",
+        "lang/id/jp.php",
+        "app/Support/DocumentIssuer.php",
+        "app/Support/Documents/DocumentContent.php",
+        "app/Support/Documents/IssueDocumentJob.php",
+        "app/Modules/Fondasi/Notifications/DocumentReady.php",
+        "app/Modules/Fondasi/Livewire/NotificationCenter.php",
+        "app/Modules/Fondasi/resources/views/livewire/notification-center.blade.php",
+        "app/Modules/Fondasi/routes.php",
+        "app/Modules/Fondasi/FondasiServiceProvider.php",
+        "app/Modules/Fondasi/Services/NavigationMenu.php",
+        "app/Modules/Fondasi/Enums/Permission.php",
+        "app/Modules/Fondasi/Database/Seeders/RolePermissionSeeder.php",
+        "app/Modules/Fondasi/Livewire/Home.php",
+        "app/Modules/Fondasi/resources/views/livewire/home.blade.php",
+        "lang/id/fondasi.php",
+        "resources/views/layouts/app.blade.php",
+        "app/Modules/Idp/Actions/PublishLearningPlan.php",
+        "app/Modules/Idp/Documents/LearningPlanContent.php",
+        "app/Modules/Idp/Livewire/IdpEditor.php",
+        "app/Modules/Idp/resources/views/livewire/idp-editor.blade.php",
+        "app/Modules/Idp/Models/Idp.php",
+        "lang/id/idp.php",
+        "config/semangat.php",
+        "bootstrap/providers.php",
+        "tests/Unit/JpRiwayat/JpBalanceTest.php",
+        "tests/Feature/JpRiwayat/CertificateUploadTest.php",
+        "tests/Feature/JpRiwayat/CertificateVerificationTest.php",
+        "tests/Feature/JpRiwayat/JpHistoryTest.php",
+        "tests/Feature/JpRiwayat/LearningReportTest.php",
+        "tests/Feature/JpRiwayat/JpRecapTest.php",
+        "tests/Feature/Fondasi/NotificationCenterTest.php",
+        "tests/Scope/JpScopeTest.php",
+        "tests/Feature/CycleTest.php",
+        "tests/Feature/Idp/LearningPlanTest.php",
+        "tests/Scope/IdpScopeTest.php",
+        "tests/Arch/ArchitectureTest.php",
+        "docs/23_ACCEPTANCE_CRITERIA.md",
+        "docs/_archive/23-F4.md",
+        "docs/03_ROADMAP.md",
+        "docs/_MANIFEST.json",
+        "docs/07_DATA_MODEL.md",
+        "docs/user/jp.md",
+        "docs/_CODING_LEDGER.json",
+        "docs/_TOKEN_LEDGER.json"
+      ],
+      "total_step": 0,
+      "step": [
+        {
+          "no": 1,
+          "nama": "Skema/migrasi",
+          "mulai": "2026-11-01T06:49:35+00:00",
+          "selesai": "2026-11-01T06:50:08+00:00",
+          "detik": 34,
+          "tok_est": 5707,
+          "muat": [
+            "docs/07_DATA_MODEL.md",
+            "app/Modules/JpRiwayat/Database/Migrations/2026_11_01_100000_create_out_jp_records_table.php",
+            "app/Modules/JpRiwayat/Database/Migrations/2026_11_01_100100_create_out_certificates_table.php"
+          ]
+        },
+        {
+          "no": 2,
+          "nama": "Model/akses data",
+          "mulai": "2026-11-01T06:50:15+00:00",
+          "selesai": "2026-11-01T06:51:19+00:00",
+          "detik": 64,
+          "tok_est": 4713,
+          "muat": [
+            "app/Modules/JpRiwayat/Models/JpRecord.php",
+            "app/Modules/JpRiwayat/Models/Certificate.php",
+            "app/Modules/JpRiwayat/Policies/JpRecordPolicy.php",
+            "app/Modules/Idp/Models/Idp.php",
+            "app/Modules/Integrasi/Models/Employee.php",
+            "app/Support/Scope/DataScope.php"
+          ]
+        },
+        {
+          "no": 3,
+          "nama": "Service/logika domain",
+          "mulai": "2026-11-01T06:51:19+00:00",
+          "selesai": "2026-11-01T06:53:41+00:00",
+          "detik": 142,
+          "tok_est": 6300,
+          "muat": [
+            "app/Support/DocumentIssuer.php",
+            "app/Support/Documents/IssueDocumentJob.php",
+            "app/Modules/JpRiwayat/Services/JpRecap.php",
+            "app/Modules/JpRiwayat/Actions/UploadCertificate.php",
+            "app/Modules/JpRiwayat/Actions/VerifyCertificate.php",
+            "app/Modules/Kompetensi/Services/GapAggregator.php",
+            "app/Modules/Idp/Actions/PublishLearningPlan.php"
+          ]
+        },
+        {
+          "no": 4,
+          "nama": "Endpoint/controller/rute",
+          "mulai": "2026-11-01T06:53:41+00:00",
+          "selesai": "2026-11-01T06:54:09+00:00",
+          "detik": 29,
+          "tok_est": 1236,
+          "muat": [
+            "app/Modules/JpRiwayat/routes.php",
+            "app/Modules/JpRiwayat/Http/Controllers/CertificateDownloadController.php",
+            "app/Modules/JpRiwayat/Http/Controllers/LearningReportDownloadController.php",
+            "app/Modules/Fondasi/routes.php"
+          ]
+        },
+        {
+          "no": 5,
+          "nama": "UI + empat state",
+          "mulai": "2026-11-01T06:54:09+00:00",
+          "selesai": "2026-11-01T06:58:09+00:00",
+          "detik": 240,
+          "tok_est": 19061,
+          "muat": [
+            "docs/26_UI_CONVENTIONS.md",
+            "app/Modules/JpRiwayat/Livewire/JpOverview.php",
+            "app/Modules/JpRiwayat/resources/views/livewire/jp-overview.blade.php",
+            "app/Modules/JpRiwayat/resources/views/livewire/certificate-verification-list.blade.php",
+            "app/Modules/JpRiwayat/resources/views/livewire/jp-recap-report.blade.php",
+            "app/Modules/JpRiwayat/resources/views/pdf/learning-report.blade.php",
+            "lang/id/jp.php",
+            "app/Modules/Idp/resources/views/livewire/idp-editor.blade.php",
+            "app/Modules/Idp/resources/views/livewire/team-approval-list.blade.php"
+          ]
+        },
+        {
+          "no": 6,
+          "nama": "Tes",
+          "mulai": "2026-11-01T06:58:09+00:00",
+          "selesai": "2026-11-01T07:07:20+00:00",
+          "detik": 551,
+          "tok_est": 14770,
+          "muat": [
+            "docs/13_TESTING.md",
+            "tests/Feature/CycleTest.php",
+            "tests/Scope/JpScopeTest.php",
+            "tests/Feature/JpRiwayat/CertificateUploadTest.php",
+            "tests/Feature/JpRiwayat/CertificateVerificationTest.php",
+            "tests/Feature/JpRiwayat/LearningReportTest.php",
+            "tests/Feature/JpRiwayat/JpRecapTest.php",
+            "tests/Feature/Idp/LearningPlanTest.php",
+            "tests/Pest.php",
+            "tests/Arch/ArchitectureTest.php"
+          ]
+        },
+        {
+          "no": 7,
+          "nama": "Gerbang fitur",
+          "mulai": "2026-11-01T07:07:20+00:00",
+          "selesai": "2026-11-01T07:09:46+00:00",
+          "detik": 146,
+          "tok_est": 10755,
+          "muat": [
+            "docs/23_ACCEPTANCE_CRITERIA.md",
+            "docs/_archive/23-F4.md",
+            "docs/03_ROADMAP.md",
+            "docs/_MANIFEST.json",
+            "docs/07_DATA_MODEL.md",
+            "docs/user/jp.md"
+          ]
+        }
+      ],
+      "detik": 1206,
+      "tok_est": 62542,
+      "deviasi": [
+        "tests/Pest.php — helper certificatePdf()/jpInput() ditaruh di rumah helper tes bersama (di luar rencana)",
+        "app/Modules/Idp/Models/Idp.php — relasi learningPlan diperbaiki (filter type/revoked_at di subkueri ofMany); bug laten F3 terungkap saat Laporan terbit"
+      ],
+      "warn_dilewati": [
+        "S1/S6 manual: dibuktikan lewat pemetaan kriteria→tes dan tinjauan konvensi",
+        "S7: SEMANGAT.code-workspace untracked milik pengguna, tidak di-commit",
+        "gerbang.sh S4/S8 hanya melihat diff belum-commit; diulang manual atas main...HEAD"
+      ],
+      "asumsi": [
+        "CatatanJP.year = tahun activity_end",
+        "Duplikat judul+tanggal+penyelenggara mengabaikan catatan rejected; duplikat hash tetap mutlak (UNIQUE DB)",
+        "Laporan Hasil Pembelajaran diterbitkan pemilik IDP saja, satu per IDP",
+        "Pegawai koord. OPD tidak memverifikasi sertifikat sendiri",
+        "Rekap JP menghitung pegawai aktif tanpa catatan sebagai 0 JP",
+        "Layak 360 px belum diverifikasi visual di peramban — pola kelas mobile-first mengikuti halaman F3"
+      ],
+      "dokumen_diperbarui": [
+        "docs/07_DATA_MODEL.md (catatan migrasi F4)",
+        "docs/23_ACCEPTANCE_CRITERIA.md + docs/_archive/23-F4.md",
+        "docs/03_ROADMAP.md (F4 Selesai)",
+        "docs/_MANIFEST.json (phases.F4)",
+        "docs/user/jp.md (baru)"
+      ],
+      "ditunda": [
+        "pln_jp_conversion_rules & konversi JP (KAT-06) — F5",
+        "Pemanggil RecordJp dari M08/M09/M10 — F5/F8",
+        "Kanal notifikasi surel/WA — diputuskan tidak dibangun",
+        "Preferensi notifikasi per pengguna (FON-07 penuh)"
+      ],
+      "selesai": "2026-11-01T07:09:46+00:00"
     }
   ],
   "akumulasi": {
-    "detik": 2782,
-    "tok_est": 99416,
+    "detik": 3988,
+    "tok_est": 161958,
     "tok_terukur": 0,
-    "step": 14,
-    "fitur": 2
+    "step": 21,
+    "fitur": 3
   }
 }
