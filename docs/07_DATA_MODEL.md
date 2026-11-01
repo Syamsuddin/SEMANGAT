@@ -181,6 +181,8 @@ idp_item_id FK, portion tinyint (10/20/70), title varchar(200), program_id FK→
 ### pln_idp_checkins (IDP-06)
 idp_id FK, checkin_on date, quarter tinyint, employee_note text, supervisor_note text NULL, progress json ({item_id: pct}).
 
+Catatan migrasi F3: UNIQUE "di antara yang belum `cancelled`" ditegakkan lewat kolom bangkitan `pln_idps.open_period_year` (STORED, NULL bila `cancelled`) + UNIQUE(employee_id, open_period_year). `supervisor_id` NULL selama `draft` (dibekukan saat ajukan). Tabel anak (`pln_idp_items`, `_activities`, `_checkins`) `ON DELETE CASCADE` ke induknya; `pln_idp_items.gap_id` `ON DELETE SET NULL` karena `cmp_gaps` dihapus saat kesenjangan tertutup. `pln_idp_activities.program_id` tanpa FK sampai `lrn_programs` ada (F5). `pln_idp_checkins` UNIQUE(idp_id, quarter). Tabel bawaan `notifications` (kanal `database`) dimigrasi di F3 untuk notifikasi IDP.
+
 ## F4 — JP & riwayat
 
 ### out_jp_records (CatatanJP)

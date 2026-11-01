@@ -16,7 +16,7 @@ Pemilik daftar teknologi & versi. Pin versi minor di `composer.json`/`package.js
 | RBAC | `spatie/laravel-permission` | 6.x |
 | Auth & 2FA | Laravel Fortify | 1.x |
 | PDF | `barryvdh/laravel-dompdf` | 3.x |
-| QR | `simplesoftwareio/simple-qrcode` | 4.x |
+| QR | `bacon/bacon-qr-code` (SVG; sudah dipakai Fortify — `simple-qrcode` 4.x bentrok dengan bacon ^3, keputusan pemilik produk 2026-11-01) | 3.x |
 | Impor/ekspor berkas | `openspout/openspout` | 4.x |
 | Tes | Pest | 3.x (+ `pest-plugin-laravel`, `pest-plugin-livewire`, arch) |
 | Analisis statis | Larastan | 3.x, level 6 |
