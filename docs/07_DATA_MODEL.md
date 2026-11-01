@@ -206,7 +206,7 @@ employee_id FK, jp_record_id FK UNIQUE, issuer varchar(200), number varchar(100)
 ### pln_jp_conversion_rules (KAT-06, dikelola pengelola)
 activity_type varchar(40), unit varchar(20) (`hour`,`day`,`session`,`activity`), jp_per_unit decimal(4,1), max_jp decimal(5,1) NULL, effective_from date. Nilai konkret ditetapkan pengelola di F5 (KAT-06). Sampai itu (F4) JP sertifikat luar diisi pegawai sesuai sertifikat lalu dikonfirmasi/dikoreksi verifikator (keputusan pemilik produk 2026-11-01).
 
-Catatan migrasi F4: `out_jp_records.jp` ditegakkan juga oleh CHECK `jp > 0`; `verified_by` FK→`users` (NULL untuk catatan otomatis JPR-03); indeks tambahan (sourceable_type, sourceable_id) untuk idempotensi pencatatan otomatis; `year` = tahun `activity_end`. `out_certificates.jp_record_id` `ON DELETE CASCADE`. Keduanya tanpa `deleted_at`: catatan JP tidak dihapus, penolakan = status `rejected`. `pln_jp_conversion_rules` belum dimigrasi (KAT-06, F5).
+Catatan migrasi F4: `out_jp_records.jp` ditegakkan juga oleh CHECK `jp > 0`; `verified_by` FK→`users` (NULL untuk catatan otomatis JPR-03); UNIQUE (sourceable_type, sourceable_id) menegakkan idempotensi pencatatan otomatis juga saat serentak (NULL untuk unggah manual boleh berulang); `year` = tahun `activity_end`. `out_certificates.jp_record_id` `ON DELETE CASCADE`. Keduanya tanpa `deleted_at`: catatan JP tidak dihapus, penolakan = status `rejected`. `pln_jp_conversion_rules` belum dimigrasi (KAT-06, F5).
 
 ## F5+ — tabel inti fase berikutnya (rincikan kolom saat fasenya dimulai, lewat rute "Ubah skema DB")
 | Tabel | Kunci & relasi | Catatan |
