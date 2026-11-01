@@ -2,6 +2,7 @@
 
 namespace App\Modules\Idp\Models;
 
+use App\Modules\Fondasi\Enums\DocumentType;
 use App\Modules\Fondasi\Models\IssuedDocument;
 use App\Modules\Fondasi\Models\User;
 use App\Modules\Idp\Database\Factories\IdpFactory;
@@ -40,6 +41,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, IdpItem> $items
  * @property-read Collection<int, IdpCheckin> $checkins
  * @property-read IssuedDocument|null $learningPlan
+ * @property-read IssuedDocument|null $learningReport
  */
 class Idp extends Model
 {
@@ -128,7 +130,26 @@ class Idp extends Model
     /** @return MorphOne<IssuedDocument, $this> */
     public function learningPlan(): MorphOne
     {
-        return $this->morphOne(IssuedDocument::class, 'documentable')->whereNull('revoked_at')->latestOfMany('issued_at');
+        return $this->issuedDocument(DocumentType::LearningPlan);
+    }
+
+    /**
+     * JPR-05: Laporan Hasil Pembelajaran terbitan (M12) atas IDP `closed`.
+     *
+     * @return MorphOne<IssuedDocument, $this>
+     */
+    public function learningReport(): MorphOne
+    {
+        return $this->issuedDocument(DocumentType::LearningReport);
+    }
+
+    /** @return MorphOne<IssuedDocument, $this> */
+    private function issuedDocument(DocumentType $type): MorphOne
+    {
+        return $this->morphOne(IssuedDocument::class, 'documentable')
+            ->where('type', $type->value)
+            ->whereNull('revoked_at')
+            ->latestOfMany('issued_at');
     }
 
     protected static function newFactory(): IdpFactory

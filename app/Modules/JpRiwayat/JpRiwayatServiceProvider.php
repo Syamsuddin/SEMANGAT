@@ -2,6 +2,9 @@
 
 namespace App\Modules\JpRiwayat;
 
+use App\Modules\JpRiwayat\Models\JpRecord;
+use App\Modules\JpRiwayat\Policies\JpRecordPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,5 +16,7 @@ class JpRiwayatServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/Database/Migrations');
         $this->loadViewsFrom(__DIR__.'/resources/views', 'jp');
         Route::middleware('web')->group(__DIR__.'/routes.php');
+
+        Gate::policy(JpRecord::class, JpRecordPolicy::class);
     }
 }
