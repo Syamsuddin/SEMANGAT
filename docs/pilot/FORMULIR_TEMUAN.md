@@ -10,7 +10,7 @@ Isi satu baris untuk setiap kendala, kebingungan, atau saran selama uji coba (`d
 ## Kategori
 | Kategori | Artinya |
 |---|---|
-| **Penghalang** | Langkah tidak bisa diselesaikan sama sekali, atau data orang lain terlihat. |
+| **Penghalang** | Langkah tidak bisa diselesaikan sama sekali, atau terlihat data di luar cakupan akses akun Anda (mis. pegawai yang bukan bawahan langsung Anda atau bukan pegawai OPD yang Anda koordinasi). Melihat data bawahan sendiri atau pegawai OPD Anda sebagai koordinator **bukan** penghalang. |
 | **Berat** | Bisa diselesaikan, tetapi hasilnya salah atau sangat menyulitkan. |
 | **Ringan** | Tampilan kurang rapi, istilah membingungkan, atau perlu langkah tambahan. |
 | **Saran** | Usulan perbaikan; tidak ada yang salah. |
